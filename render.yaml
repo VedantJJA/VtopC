@@ -1,0 +1,18 @@
+# This file tells Render how to deploy your application.
+services:
+  # This defines your web service.
+  - type: web
+    # Updated to your specified app name.
+    name: vitcc
+    # Specifies that this is a Python environment.
+    env: python
+    # The free plan is suitable for this app.
+    plan: free
+    # The command to install all the libraries from requirements.txt.
+    buildCommand: "pip install -r requirements.txt"
+    # The command to start the production server using Gunicorn.
+    startCommand: "gunicorn app:app"
+    # Ensures Render uses your specified version of Python.
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5

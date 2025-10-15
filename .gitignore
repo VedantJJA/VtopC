@@ -1,0 +1,21 @@
+Python virtual environment
+
+venv/
+env/
+.venv/
+Python cache files
+
+pycache/
+*.pyc
+User-specific session files (sensitive data)
+
+vtop_session.pkl
+Temporary debug files
+
+*.html # This will ignore all .html files in the root, like timetable_debug.html
+*.json # This will ignore all .json files in the root
+network_log.txt
+IDE/Editor specific files
+
+.vscode/
+.idea/
