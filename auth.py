@@ -10,7 +10,7 @@ auth_bp = Blueprint('auth_bp', __name__)
 
 VTOP_BASE_URL = "https://vtopcc.vit.ac.in/vtop/"
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
 }
 
 @auth_bp.route('/check-session', methods=['POST'])
@@ -50,7 +50,7 @@ def start_login():
             headers=HEADERS,
             verify=False,
             timeout=20,
-            allow_redirects=True 
+            allow_redirects=True
         )
         soup_login = BeautifulSoup(login_page_response.text, 'html.parser')
         csrf_token_login = soup_login.find('input', {'name': '_csrf'}).get('value')
@@ -70,7 +70,7 @@ def start_login():
         
         session_storage[session_id] = {
             'session': api_session,
-            'csrf_token': csrf_token_login 
+            'csrf_token': csrf_token_login
         }
 
         print(f"   > CAPTCHA successfully fetched for session: {session_id}")
@@ -90,7 +90,31 @@ def login_attempt():
     data = request.json
     username, password, captcha_text, session_id = data.get('username'), data.get('password'), data.get('captcha'), data.get('session_id')
     
-    if not all([username, password, captcha_text, session_id]) or session_id not in session_storage:
+    # ** NEW: Handle empty captcha submission gracefully **
+    if not captcha_text:
+        # Ensure session exists before trying to use it
+        if not session_id or session_id not in session_storage:
+            return jsonify({'status': 'failure', 'message': 'Session expired. Please refresh.'}), 400
+        
+        try:
+            # We still need to provide a new captcha image to the user
+            api_session = session_storage[session_id]['session']
+            captcha_url = VTOP_BASE_URL + "get/new/captcha"
+            captcha_response = api_session.get(captcha_url, headers=HEADERS, verify=False)
+            soup_captcha = BeautifulSoup(captcha_response.text, 'html.parser')
+            new_captcha_img = soup_captcha.find('img')
+            new_img_base64 = new_captcha_img['src'] if new_captcha_img else ""
+            
+            return jsonify({
+                'status': 'invalid_captcha', # Reuse this status to trigger UI update
+                'message': 'Please enter the CAPTCHA text.',
+                'session_id': session_id,
+                'captcha_image_data': new_img_base64
+            })
+        except Exception as e:
+             return jsonify({'status': 'failure', 'message': f'Error refreshing CAPTCHA: {e}'}), 500
+    
+    if not all([username, password, session_id]) or session_id not in session_storage:
         return jsonify({'status': 'failure', 'message': 'Session expired. Please refresh.'}), 400
         
     stored_session = session_storage[session_id]
@@ -112,9 +136,19 @@ def login_attempt():
             soup_error = BeautifulSoup(response.text, 'html.parser')
             
             error_message = "Invalid Credentials or CAPTCHA."
-            error_tag = soup_error.find("font", {"color": "red"})
+            
+            error_tag = soup_error.select_one("span.text-danger strong")
+            
             if error_tag:
-                error_message = error_tag.get_text(strip=True)
+                error_message = error_tag.get_text(strip=True).lower()
+
+            status_code = 'credentials_invalid' # Default error
+            if 'captcha' in error_message:
+                status_code = 'invalid_captcha'
+                error_message = 'The CAPTCHA you entered was incorrect. Please try again.'
+            elif 'loginid' in error_message or 'password' in error_message:
+                status_code = 'invalid_credentials'
+                error_message = 'Invalid username or password. Please check your credentials.'
 
             captcha_url = VTOP_BASE_URL + "get/new/captcha"
             captcha_response = api_session.get(captcha_url, headers=HEADERS, verify=False)
@@ -127,7 +161,7 @@ def login_attempt():
                 stored_session['csrf_token'] = new_csrf.get('value')
             
             return jsonify({
-                'status': 'credentials_invalid',
+                'status': status_code,
                 'message': error_message,
                 'session_id': session_id,
                 'captcha_image_data': new_img_base64
