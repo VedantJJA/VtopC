@@ -14,13 +14,11 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-[Inter,sans-serif]">
     <div class="w-full max-w-6xl mx-auto">
         
-        <!-- Loading container shown on initial page load -->
         <div id="loadingContainer" class="text-center p-8">
             <i class="fas fa-spinner fa-spin text-4xl text-indigo-600"></i>
             <p class="mt-4 text-gray-600">Checking for a saved session...</p>
         </div>
 
-        <!-- Login form, hidden by default -->
         <div id="loginContainer" class="hidden w-full max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg transition-all duration-300">
             <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">VTOP Login</h1>
             <p class="text-center text-gray-500 mb-6">Enter your credentials to begin.</p>
@@ -38,15 +36,17 @@
                     <label for="password" class="text-sm font-medium text-gray-700">Password</label>
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center"><i class="fas fa-lock text-gray-400"></i></div>
-                        <input type="password" id="password" name="password" required class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Your Password">
+                        <input type="password" id="password" name="password" required class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Your Password">
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
+                            <i class="fas fa-eye text-gray-400"></i>
+                        </button>
                     </div>
                 </div>
                 
                 <div id="captchaGroup" class="hidden">
                      <label for="captcha" class="text-sm font-medium text-gray-700">CAPTCHA</label>
                      <div id="captchaImageContainer" class="mt-1 flex items-center justify-center bg-gray-100 rounded-md h-20 p-2 border">
-                        <!-- CAPTCHA image or spinner will be injected here -->
-                     </div>
+                        </div>
                      <input type="text" id="captcha" name="captcha" class="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter CAPTCHA text" autocomplete="off">
                 </div>
                 
@@ -60,7 +60,6 @@
             <div id="statusMessage" class="mt-6 text-center text-sm font-medium"></div>
         </div>
 
-        <!-- Dashboard, hidden by default -->
         <div id="dashboardContainer" class="hidden w-full bg-white p-6 sm:p-8 rounded-xl shadow-lg transition-all duration-300">
              <div class="flex flex-col sm:flex-row justify-between items-start mb-6 border-b pb-4">
                 <div>
@@ -75,8 +74,7 @@
                  <button id="fetchAttendanceBtn" class="w-full flex justify-center py-2 px-4 border rounded-md shadow-sm text-sm font-medium text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50">View Attendance</button>
             </div>
             <div id="dataContainer" class="mt-6 overflow-x-auto bg-gray-50 p-4 rounded-lg border">
-                <!-- Data from VTOP (timetable, grades, etc.) will be injected here -->
-            </div>
+                </div>
         </div>
     </div>
 
