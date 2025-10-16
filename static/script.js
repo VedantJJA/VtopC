@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_BASE_URL = 'http://127.0.0.1:5000';
+    // This is the key change: It dynamically sets the URL to the current server.
+    const API_BASE_URL = window.location.origin;
     
     // DOM Element variables
     const loadingContainer = document.getElementById('loadingContainer');
@@ -43,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- CORE LOGIC ---
     
-    // NEW function to pre-fetch CAPTCHA
     async function preFetchCaptcha() {
         console.log("Pre-fetching CAPTCHA...");
         captchaGroup.classList.remove('hidden');
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data.status === 'captcha_ready') {
-                sessionIdInput.value = data.session_id; // Store session ID
+                sessionIdInput.value = data.session_id;
                 captchaImageContainer.innerHTML = `<img src="${data.captcha_image_data}" alt="CAPTCHA"/>`;
                 document.getElementById('captcha').focus();
             } else {
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dashboardContainer.classList.add('hidden');
         loginContainer.classList.remove('hidden');
         setStatus("Please enter your credentials.");
-        preFetchCaptcha(); // <-- TRIGGER CAPTCHA FETCH IMMEDIATELY
+        preFetchCaptcha();
     }
 
     async function checkSession() {
@@ -93,9 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // SIMPLIFIED login handler
     async function handleLoginAttempt() {
         setButtonLoading(true);
+        setStatus('Attempting login...', false);
         
         const payload = { 
             session_id: sessionIdInput.value,
@@ -105,15 +105,19 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const response = await fetch(`${API_BASE_URL}/login-attempt`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+            const response = await fetch(`${API_BASE_URL}/login-attempt`, { 
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify(payload) 
+            });
             if (!response.ok) throw new Error(`Server error: ${response.status}`);
             const data = await response.json();
 
             if (data.status === 'success') {
                 showDashboard(data.message, data.session_id);
-            } else if (data.status === 'captcha_invalid' || data.status === 'credentials_invalid') {
+            } else if (data.status === 'credentials_invalid') {
                 setStatus(data.message, true);
-                sessionIdInput.value = data.session_id;
+                sessionIdInput.value = data.session_id; // Keep the session_id
                 captchaImageContainer.innerHTML = `<img src="${data.captcha_image_data}" alt="New CAPTCHA"/>`;
                 document.getElementById('captcha').value = '';
                 document.getElementById('captcha').focus();
@@ -127,7 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Generic function to fetch and display data in the dashboard
     async function genericDataFetcher(targetEndpoint, button) {
         const originalText = button.innerHTML;
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
@@ -146,7 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
-            dataContainer.innerHTML = data.html_content;
+            if (data.status === 'success') {
+                dataContainer.innerHTML = data.html_content;
+            } else {
+                 throw new Error(data.message || "Failed to fetch data.");
+            }
 
         } catch (error) {
             dataContainer.innerHTML = `<p class="text-red-500 text-center">Error: ${error.message}</p>`;
@@ -163,9 +170,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     logoutBtn.addEventListener('click', async () => { 
-        await fetch(`${API_BASE_URL}/logout`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({session_id: currentSessionId}) }); 
-        showLoginScreen(); 
-        dataContainer.innerHTML = ''; // Clear dashboard content on logout
+        await fetch(`${API_BASE_URL}/logout`, { 
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify({session_id: currentSessionId}) 
+        }); 
+        window.location.reload();
     });
 
     fetchTimetableBtn.addEventListener('click', (e) => { 
