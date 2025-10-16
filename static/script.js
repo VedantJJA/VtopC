@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchTimetableBtn = document.getElementById('fetchTimetableBtn');
     const fetchGradesBtn = document.getElementById('fetchGradesBtn');
     const fetchAttendanceBtn = document.getElementById('fetchAttendanceBtn');
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const captchaInput = document.getElementById('captcha');
     
     // --- UI HELPER FUNCTIONS ---
     function setStatus(message, isError = false) {
@@ -37,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
         loginContainer.classList.add('hidden');
         dashboardContainer.classList.remove('hidden');
         welcomeMessage.textContent = message;
-        // ** NEW: Store the session ID in the browser's local storage **
         localStorage.setItem('vtop_session_id', sessionId);
     }
 
@@ -53,9 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data.status === 'captcha_ready') {
-                sessionIdInput.value = data.session_id; // Store session ID in hidden input for the first login
+                sessionIdInput.value = data.session_id;
                 captchaImageContainer.innerHTML = `<img src="${data.captcha_image_data}" alt="CAPTCHA"/>`;
-                document.getElementById('captcha').focus();
+                captchaInput.focus();
             } else {
                 throw new Error(data.message || 'Failed to get CAPTCHA.');
             }
@@ -66,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showLoginScreen() {
-        // ** NEW: Clear any old session ID from storage **
         localStorage.removeItem('vtop_session_id');
         sessionIdInput.value = '';
         captchaGroup.classList.add('hidden');
@@ -78,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function checkSession() {
-        // ** NEW: Check for a session ID in local storage **
         const savedSessionId = localStorage.getItem('vtop_session_id');
         if (!savedSessionId) {
             showLoginScreen();
@@ -112,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const payload = { 
             session_id: sessionIdInput.value,
             username: document.getElementById('username').value, 
-            password: document.getElementById('password').value, 
-            captcha: document.getElementById('captcha').value
+            password: passwordInput.value, 
+            captcha: captchaInput.value
         };
 
         try {
@@ -127,12 +127,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.status === 'success') {
                 showDashboard(data.message, data.session_id);
-            } else if (data.status === 'credentials_invalid') {
+            } else if (data.status === 'invalid_credentials' || data.status === 'invalid_captcha') {
                 setStatus(data.message, true);
                 sessionIdInput.value = data.session_id;
                 captchaImageContainer.innerHTML = `<img src="${data.captcha_image_data}" alt="New CAPTCHA"/>`;
-                document.getElementById('captcha').value = '';
-                document.getElementById('captcha').focus();
+                captchaInput.value = '';
+                captchaInput.focus();
             } else {
                 throw new Error(data.message || "An unknown login error occurred.");
             }
@@ -149,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
         button.disabled = true;
 
         try {
-            // ** NEW: Get the session ID from local storage for every request **
             const currentSessionId = localStorage.getItem('vtop_session_id');
             const response = await fetch(`${API_BASE_URL}/fetch-data`, {
                 method: 'POST',
@@ -159,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                if (response.status === 401) { // 401 Unauthorized means session is invalid
+                if (response.status === 401) {
                     showLoginScreen();
                 }
                 throw new Error(errorData.message || `Server error: ${response.status}`);
@@ -180,6 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
+    // --- EVENT LISTENERS ---
+    
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         handleLoginAttempt();
@@ -196,6 +197,15 @@ document.addEventListener('DOMContentLoaded', () => {
         dataContainer.innerHTML = '';
     });
 
+    togglePasswordBtn.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        const icon = togglePasswordBtn.querySelector('i');
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+    });
+
     fetchTimetableBtn.addEventListener('click', (e) => { 
         genericDataFetcher('academics/common/StudentTimeTableChn', e.target); 
     });
@@ -206,6 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchAttendanceBtn.addEventListener('click', (e) => { 
         genericDataFetcher('processViewStudentAttendance', e.target); 
+    });
+
+    captchaInput.addEventListener('input', () => {
+        captchaInput.value = captchaInput.value.toUpperCase();
     });
 
     // Initial check on page load
