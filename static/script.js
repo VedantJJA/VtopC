@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // This is the key change: It dynamically sets the URL to the current server.
     const API_BASE_URL = window.location.origin;
     
     // DOM Element variables
@@ -20,8 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fetchTimetableBtn = document.getElementById('fetchTimetableBtn');
     const fetchGradesBtn = document.getElementById('fetchGradesBtn');
     const fetchAttendanceBtn = document.getElementById('fetchAttendanceBtn');
-    let currentSessionId = null;
-
+    
     // --- UI HELPER FUNCTIONS ---
     function setStatus(message, isError = false) {
         statusMessage.textContent = message;
@@ -39,13 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
         loginContainer.classList.add('hidden');
         dashboardContainer.classList.remove('hidden');
         welcomeMessage.textContent = message;
-        currentSessionId = sessionId;
+        // ** NEW: Store the session ID in the browser's local storage **
+        localStorage.setItem('vtop_session_id', sessionId);
     }
 
     // --- CORE LOGIC ---
     
     async function preFetchCaptcha() {
-        console.log("Pre-fetching CAPTCHA...");
         captchaGroup.classList.remove('hidden');
         captchaImageContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i>';
         
@@ -55,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data.status === 'captcha_ready') {
-                sessionIdInput.value = data.session_id;
+                sessionIdInput.value = data.session_id; // Store session ID in hidden input for the first login
                 captchaImageContainer.innerHTML = `<img src="${data.captcha_image_data}" alt="CAPTCHA"/>`;
                 document.getElementById('captcha').focus();
             } else {
@@ -68,6 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showLoginScreen() {
+        // ** NEW: Clear any old session ID from storage **
+        localStorage.removeItem('vtop_session_id');
         sessionIdInput.value = '';
         captchaGroup.classList.add('hidden');
         loadingContainer.classList.add('hidden');
@@ -78,10 +78,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function checkSession() {
+        // ** NEW: Check for a session ID in local storage **
+        const savedSessionId = localStorage.getItem('vtop_session_id');
+        if (!savedSessionId) {
+            showLoginScreen();
+            return;
+        }
+
         try {
-            const response = await fetch(`${API_BASE_URL}/check-session`);
-            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+            const response = await fetch(`${API_BASE_URL}/check-session`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ session_id: savedSessionId })
+            });
+
+            if (!response.ok) throw new Error('Session validation failed.');
             const data = await response.json();
+
             if (data.status === 'success') {
                 showDashboard(data.message, data.session_id);
             } else {
@@ -89,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             showLoginScreen();
-            setStatus(`Connection Error: ${error.message}`, true);
         }
     }
     
@@ -117,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showDashboard(data.message, data.session_id);
             } else if (data.status === 'credentials_invalid') {
                 setStatus(data.message, true);
-                sessionIdInput.value = data.session_id; // Keep the session_id
+                sessionIdInput.value = data.session_id;
                 captchaImageContainer.innerHTML = `<img src="${data.captcha_image_data}" alt="New CAPTCHA"/>`;
                 document.getElementById('captcha').value = '';
                 document.getElementById('captcha').focus();
@@ -137,6 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
         button.disabled = true;
 
         try {
+            // ** NEW: Get the session ID from local storage for every request **
+            const currentSessionId = localStorage.getItem('vtop_session_id');
             const response = await fetch(`${API_BASE_URL}/fetch-data`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -145,6 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                if (response.status === 401) { // 401 Unauthorized means session is invalid
+                    showLoginScreen();
+                }
                 throw new Error(errorData.message || `Server error: ${response.status}`);
             }
 
@@ -163,19 +180,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // --- EVENT LISTENERS ---
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
         handleLoginAttempt();
     });
 
     logoutBtn.addEventListener('click', async () => { 
+        const currentSessionId = localStorage.getItem('vtop_session_id');
         await fetch(`${API_BASE_URL}/logout`, { 
             method: 'POST', 
             headers: {'Content-Type': 'application/json'}, 
             body: JSON.stringify({session_id: currentSessionId}) 
         }); 
-        window.location.reload();
+        showLoginScreen();
+        dataContainer.innerHTML = '';
     });
 
     fetchTimetableBtn.addEventListener('click', (e) => { 
