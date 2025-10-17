@@ -139,7 +139,7 @@ def login_attempt():
                 'status': status_code,
                 'message': error_message,
                 'session_id': session_id,
-                'captcha_image_data': new__img_base64
+                'captcha_image_data': new_img_base64
             })
 
     except Exception as e:
