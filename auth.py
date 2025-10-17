@@ -10,9 +10,9 @@ auth_bp = Blueprint('auth_bp', __name__)
 
 VTOP_BASE_URL = "https://vtopcc.vit.ac.in/vtop/"
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
 }
-REQUEST_TIMEOUT = 25 
+REQUEST_TIMEOUT = 45 # Increased timeout for more patience
 
 @auth_bp.route('/check-session', methods=['POST'])
 def check_session():
@@ -29,51 +29,37 @@ def check_session():
 @auth_bp.route('/start-login', methods=['POST'])
 def start_login():
     """
-    Initiates a new session and correctly prepares the state for login.
+    **REWRITTEN FOR ROBUSTNESS**
+    Initiates a new session by going directly to the login page
+    and fetching the CSRF token and CAPTCHA in a single step.
     """
-    print("\n[INFO] Initiating new login session...")
+    print("\n[INFO] Initiating new login session with direct method...")
     session_id = str(uuid.uuid4())
     api_session = requests.Session()
 
     try:
-        landing_page_url = VTOP_BASE_URL + "open/page"
-        landing_page_response = api_session.get(landing_page_url, headers=HEADERS, verify=False, timeout=REQUEST_TIMEOUT)
-        landing_page_response.raise_for_status()
-        
-        soup_land = BeautifulSoup(landing_page_response.text, 'html.parser')
-        csrf_token_prelogin = soup_land.find('input', {'name': '_csrf'}).get('value')
-
-        prelogin_payload = {'_csrf': csrf_token_prelogin, 'flag': 'VTOP'}
-        login_page_response = api_session.post(
-            VTOP_BASE_URL + "prelogin/setup",
-            data=prelogin_payload,
-            headers=HEADERS,
-            verify=False,
-            timeout=REQUEST_TIMEOUT,
-            allow_redirects=True
-        )
+        # Go directly to the main login page. This is more robust than the old multi-step process.
+        login_page_url = VTOP_BASE_URL + "login"
+        login_page_response = api_session.get(login_page_url, headers=HEADERS, verify=False, timeout=REQUEST_TIMEOUT)
         login_page_response.raise_for_status()
         
-        soup_login = BeautifulSoup(login_page_response.text, 'html.parser')
-        csrf_token_login = soup_login.find('input', {'name': '_csrf'}).get('value')
+        soup = BeautifulSoup(login_page_response.text, 'html.parser')
         
-        captcha_url = VTOP_BASE_URL + "get/new/captcha"
-        captcha_response = api_session.get(captcha_url, headers=HEADERS, verify=False, timeout=REQUEST_TIMEOUT)
-        captcha_response.raise_for_status()
-        
-        soup_captcha = BeautifulSoup(captcha_response.text, 'html.parser')
-        captcha_img = soup_captcha.find('img')
+        # Extract the CSRF token and CAPTCHA from the login page content.
+        csrf_token = soup.find('input', {'name': '_csrf'}).get('value')
+        captcha_img = soup.find('img', {'class': 'form-control'})
 
-        if not captcha_img or not captcha_img.get('src'):
-            raise ValueError("Could not find CAPTCHA image in the dynamic captcha response.")
+        if not csrf_token or not captcha_img or not captcha_img.get('src'):
+            raise ValueError("Could not find CSRF token or CAPTCHA image on the login page.")
 
         img_base64_data = captcha_img['src']
         
         session_storage[session_id] = {
             'session': api_session,
-            'csrf_token': csrf_token_login
+            'csrf_token': csrf_token
         }
-        print(f"[INFO] CAPTCHA successfully fetched for session: {session_id}")
+
+        print(f"[INFO] CAPTCHA and CSRF fetched successfully for session: {session_id}")
         return jsonify({
             'status': 'captcha_ready',
             'session_id': session_id,
@@ -90,7 +76,7 @@ def start_login():
         return jsonify({'status': 'vtop_connection_error', 'message': message}), 503
     except Exception as e:
         print(f"[ERROR] GENERIC ERROR during start-login: {e}")
-        return jsonify({'status': 'failure', 'message': str(e)}), 500
+        return jsonify({'status': 'failure', 'message': "An unexpected error occurred while trying to load the login page."}), 500
 
 
 @auth_bp.route('/login-attempt', methods=['POST'])
@@ -113,6 +99,7 @@ def login_attempt():
         
         soup = BeautifulSoup(response.text, 'html.parser')
         
+        # Success is determined by the absence of the login form on the response page.
         login_form = soup.find('form', {'id': 'vtopLoginForm'})
 
         if not login_form:
@@ -137,10 +124,8 @@ def login_attempt():
                 else:
                     error_message = error_tag.get_text(strip=True) 
             
-            captcha_url = VTOP_BASE_URL + "get/new/captcha"
-            captcha_response = api_session.get(captcha_url, headers=HEADERS, verify=False)
-            soup_captcha = BeautifulSoup(captcha_response.text, 'html.parser')
-            new_captcha_img = soup_captcha.find('img')
+            # Get the new CAPTCHA from the failed login page.
+            new_captcha_img = soup.find('img', {'class': 'form-control'})
             new_img_base64 = new_captcha_img['src'] if new_captcha_img else ""
             
             new_csrf = soup.find('input', {'name': '_csrf'})
