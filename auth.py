@@ -39,7 +39,7 @@ def start_login():
         landing_page_response = api_session.get(landing_page_url, headers=HEADERS, verify=False, timeout=20)
         soup_land = BeautifulSoup(landing_page_response.text, 'html.parser')
         csrf_token_prelogin = soup_land.find('input', {'name': '_csrf'}).get('value')
-7
+
         prelogin_payload = {'_csrf': csrf_token_prelogin, 'flag': 'VTOP'}
         login_page_response = api_session.post(
             VTOP_BASE_URL + "prelogin/setup",
@@ -101,7 +101,6 @@ def login_attempt():
         
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # ** NEW ROBUST SUCCESS CHECK: A successful login will NOT have the login form. **
         login_form = soup.find('form', {'id': 'vtopLoginForm'})
 
         if not login_form:
@@ -111,7 +110,7 @@ def login_attempt():
         else:
             print("   > Login failed. Parsing for error and new CAPTCHA...")
             
-            error_message = "Invalid credentials or CAPTCHA." # Safe default
+            error_message = "Invalid credentials or CAPTCHA." 
             status_code = 'credentials_invalid'
 
             error_tag = soup.select_one("span.text-danger strong")
@@ -124,7 +123,7 @@ def login_attempt():
                     status_code = 'invalid_credentials'
                     error_message = 'Invalid username or password. Please check your credentials.'
                 else:
-                    error_message = error_tag.get_text(strip=True) # Show the unknown error
+                    error_message = error_tag.get_text(strip=True) 
             
             captcha_url = VTOP_BASE_URL + "get/new/captcha"
             captcha_response = api_session.get(captcha_url, headers=HEADERS, verify=False)
