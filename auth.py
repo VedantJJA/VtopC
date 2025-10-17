@@ -13,6 +13,9 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
 }
 
+# ** NEW: Set a shorter timeout for all requests to VTOP **
+REQUEST_TIMEOUT = 25 
+
 @auth_bp.route('/check-session', methods=['POST'])
 def check_session():
     """
@@ -36,8 +39,8 @@ def start_login():
 
     try:
         landing_page_url = VTOP_BASE_URL + "open/page"
-        landing_page_response = api_session.get(landing_page_url, headers=HEADERS, verify=False, timeout=30)
-        landing_page_response.raise_for_status() # Will raise an error for bad responses
+        landing_page_response = api_session.get(landing_page_url, headers=HEADERS, verify=False, timeout=REQUEST_TIMEOUT)
+        landing_page_response.raise_for_status()
         soup_land = BeautifulSoup(landing_page_response.text, 'html.parser')
         csrf_token_prelogin = soup_land.find('input', {'name': '_csrf'}).get('value')
 
@@ -47,7 +50,7 @@ def start_login():
             data=prelogin_payload,
             headers=HEADERS,
             verify=False,
-            timeout=30,
+            timeout=REQUEST_TIMEOUT,
             allow_redirects=True
         )
         login_page_response.raise_for_status()
@@ -55,7 +58,7 @@ def start_login():
         csrf_token_login = soup_login.find('input', {'name': '_csrf'}).get('value')
         
         captcha_url = VTOP_BASE_URL + "get/new/captcha"
-        captcha_response = api_session.get(captcha_url, headers=HEADERS, verify=False, timeout=30)
+        captcha_response = api_session.get(captcha_url, headers=HEADERS, verify=False, timeout=REQUEST_TIMEOUT)
         captcha_response.raise_for_status()
         
         soup_captcha = BeautifulSoup(captcha_response.text, 'html.parser')
@@ -77,12 +80,15 @@ def start_login():
             'session_id': session_id,
             'captcha_image_data': img_base64_data
         })
-    # ** NEW: Specific check for connection issues with VTOP **
+    # ** NEW: Specific handling for timeouts vs. other connection errors **
+    except requests.exceptions.Timeout:
+        print(f"   > VTOP CONNECTION TIMEOUT")
+        message = "VTOP is taking too long to respond. Please try again in a few minutes."
+        return jsonify({'status': 'vtop_connection_error', 'message': message}), 504
     except requests.exceptions.RequestException as e:
         print(f"   > CRITICAL VTOP CONNECTION ERROR: {e}")
-        message = "Could not connect to VTOP. The service may be temporarily down. Please try again in a few minutes."
+        message = "Could not connect to VTOP. The service may be down."
         return jsonify({'status': 'vtop_connection_error', 'message': message}), 503
-
     except Exception as e:
         print(f"   > CRITICAL ERROR during CAPTCHA fetch: {e}")
         return jsonify({'status': 'failure', 'message': str(e)}), 500
@@ -103,7 +109,7 @@ def login_attempt():
     try:
         payload = {"_csrf": csrf_token, "username": username, "password": password, "captchaStr": captcha_text}
         login_url = VTOP_BASE_URL + "login"
-        response = api_session.post(login_url, data=payload, headers=HEADERS, verify=False, timeout=30)
+        response = api_session.post(login_url, data=payload, headers=HEADERS, verify=False, timeout=REQUEST_TIMEOUT)
         response.raise_for_status()
         
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -162,3 +168,4 @@ def logout():
     print(f"\n--- Session {session_id} cleared and logged out ---")
     return jsonify({'status': 'success'})
 
+                       
