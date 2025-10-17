@@ -39,7 +39,6 @@ def start_login():
         landing_page_response = api_session.get(landing_page_url, headers=HEADERS, verify=False, timeout=20)
         soup_land = BeautifulSoup(landing_page_response.text, 'html.parser')
         csrf_token_prelogin = soup_land.find('input', {'name': '_csrf'}).get('value')
-7
         prelogin_payload = {'_csrf': csrf_token_prelogin, 'flag': 'VTOP'}
         login_page_response = api_session.post(
             VTOP_BASE_URL + "prelogin/setup",
@@ -140,7 +139,7 @@ def login_attempt():
                 'status': status_code,
                 'message': error_message,
                 'session_id': session_id,
-                'captcha_image_data': new_img_base64
+                'captcha_image_data': new__img_base64
             })
 
     except Exception as e:
