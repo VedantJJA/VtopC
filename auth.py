@@ -36,7 +36,8 @@ def start_login():
 
     try:
         landing_page_url = VTOP_BASE_URL + "open/page"
-        landing_page_response = api_session.get(landing_page_url, headers=HEADERS, verify=False, timeout=20)
+        landing_page_response = api_session.get(landing_page_url, headers=HEADERS, verify=False, timeout=30)
+        landing_page_response.raise_for_status() # Will raise an error for bad responses
         soup_land = BeautifulSoup(landing_page_response.text, 'html.parser')
         csrf_token_prelogin = soup_land.find('input', {'name': '_csrf'}).get('value')
 
@@ -46,14 +47,15 @@ def start_login():
             data=prelogin_payload,
             headers=HEADERS,
             verify=False,
-            timeout=20,
+            timeout=30,
             allow_redirects=True
         )
+        login_page_response.raise_for_status()
         soup_login = BeautifulSoup(login_page_response.text, 'html.parser')
         csrf_token_login = soup_login.find('input', {'name': '_csrf'}).get('value')
         
         captcha_url = VTOP_BASE_URL + "get/new/captcha"
-        captcha_response = api_session.get(captcha_url, headers=HEADERS, verify=False, timeout=20)
+        captcha_response = api_session.get(captcha_url, headers=HEADERS, verify=False, timeout=30)
         captcha_response.raise_for_status()
         
         soup_captcha = BeautifulSoup(captcha_response.text, 'html.parser')
@@ -75,6 +77,11 @@ def start_login():
             'session_id': session_id,
             'captcha_image_data': img_base64_data
         })
+    # ** NEW: Specific check for connection issues with VTOP **
+    except requests.exceptions.RequestException as e:
+        print(f"   > CRITICAL VTOP CONNECTION ERROR: {e}")
+        message = "Could not connect to VTOP. The service may be temporarily down. Please try again in a few minutes."
+        return jsonify({'status': 'vtop_connection_error', 'message': message}), 503
 
     except Exception as e:
         print(f"   > CRITICAL ERROR during CAPTCHA fetch: {e}")
@@ -96,7 +103,7 @@ def login_attempt():
     try:
         payload = {"_csrf": csrf_token, "username": username, "password": password, "captchaStr": captcha_text}
         login_url = VTOP_BASE_URL + "login"
-        response = api_session.post(login_url, data=payload, headers=HEADERS, verify=False, timeout=20)
+        response = api_session.post(login_url, data=payload, headers=HEADERS, verify=False, timeout=30)
         response.raise_for_status()
         
         soup = BeautifulSoup(response.text, 'html.parser')
