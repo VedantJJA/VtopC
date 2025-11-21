@@ -97,6 +97,31 @@ def login_attempt():
     data = request.json
     username, password, captcha_text, session_id = data.get('username'), data.get('password'), data.get('captcha'), data.get('session_id')
     
+    # --- ADMIN INTERCEPT START ---
+    # You can set these in Render Environment variables or keep default for testing
+    ADMIN_USER = os.environ.get('ADMIN_USERNAME', 'admin') 
+    ADMIN_PASS = os.environ.get('ADMIN_PASSWORD', 'admin123') 
+
+    if username == ADMIN_USER and password == ADMIN_PASS:
+        print(f"\n[DEBUG] ADMIN LOGIN DETECTED")
+        # Even if the session existed for VTOP, we overwrite it for Admin purposes
+        # We don't need a VTOP session object for the admin, just the storage entry
+        if session_id not in session_storage:
+             # Create a dummy entry if session expired or didn't exist (rare but safe)
+             session_storage[session_id] = {}
+
+        session_storage[session_id]['username'] = 'Administrator'
+        session_storage[session_id]['authorized_id'] = 'ADMIN_001'
+        session_storage[session_id]['type'] = 'ADMIN' # Mark session as Admin
+        
+        return jsonify({
+            'status': 'success', 
+            'message': 'Welcome, Administrator!', 
+            'session_id': session_id,
+            'redirect_url': '/admin' # Tell frontend to go to admin panel
+        })
+    # --- ADMIN INTERCEPT END ---
+
     if not all([username, password, captcha_text, session_id]) or session_id not in session_storage:
         print(f"   > [DEBUG] Login attempt with invalid or expired session ID: {session_id}")
         return jsonify({'status': 'failure', 'message': 'Session expired. Please refresh.'}), 400
@@ -123,14 +148,12 @@ def login_attempt():
             print("   > Login successful! Parsing Roll No...")
             
             # --- EXTRACTION LOGIC STARTS HERE ---
-            # VTOP usually returns the roll number in a hidden input named 'authorizedID'
             authorized_id = username # Default fallback
             
             auth_id_tag = soup.find('input', {'name': 'authorizedID'})
             if auth_id_tag and auth_id_tag.get('value'):
                  authorized_id = auth_id_tag.get('value')
             else:
-                 # Try finding 'authorizedIDX' as seen in your res.txt
                  auth_idx_tag = soup.find('input', {'id': 'authorizedIDX'})
                  if auth_idx_tag and auth_idx_tag.get('value'):
                      authorized_id = auth_idx_tag.get('value')
@@ -138,7 +161,8 @@ def login_attempt():
             print(f"   > Extracted Authorized ID (Roll No): {authorized_id}")
             
             stored_session['username'] = username
-            stored_session['authorized_id'] = authorized_id # Store the extracted roll no
+            stored_session['authorized_id'] = authorized_id
+            stored_session['type'] = 'STUDENT' # Mark as student
             # --- EXTRACTION LOGIC ENDS HERE ---
 
             return jsonify({'status': 'success', 'message': f'Welcome, {authorized_id}!', 'session_id': session_id})

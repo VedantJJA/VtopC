@@ -4,6 +4,7 @@ import requests
 import warnings
 import datetime
 import re
+import sem
 
 from session_manager import session_storage
 from parsers.timetable_parser import parse_course_data
@@ -72,8 +73,9 @@ def get_semesters():
         if sem_select:
             for opt in sem_select.find_all('option'):
                 if opt.get('value'): semesters.append({'id': opt['value'], 'name': opt.get_text(strip=True)})
+        s = sem.find_semester_id({'status': 'success', 'semesters': semesters})
         
-        return jsonify({'status': 'success', 'semesters': semesters})
+        return jsonify({'status': 'success', 'semesters': semesters, 'c_sem_id': s})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 401
 

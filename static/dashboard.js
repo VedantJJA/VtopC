@@ -349,8 +349,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.status === 'success' && data.semesters.length > 0) {
                 semesterSelect.innerHTML = ''; 
                 data.semesters.forEach(s => { const opt = document.createElement('option'); opt.value = s.id; opt.textContent = s.name; semesterSelect.appendChild(opt); });
-                currentSemesterId = data.semesters[0].id;
-                refreshCurrentPage(); // Initial Load
+				console.log("Setting to")
+				console.log(data.c_sem_id)
+                currentSemesterId = data.c_sem_id;
+				semesterSelect.value = data.c_sem_id;
+                refreshCurrentPage();
             }
         } catch (error) { console.error(error); }
     }

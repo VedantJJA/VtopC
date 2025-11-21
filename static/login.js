@@ -48,8 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         captchaGroup.classList.remove('hidden');
         captchaImageContainer.innerHTML = '<i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i>';
         
-        // --- FIX ---
-        // Only set status *after* fetch, not before, so we don't overwrite errors.
         if (isRetry) {
              setStatus('Fetching new CAPTCHA...', false);
         }
@@ -72,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         setStatus('New CAPTCHA solved. Auto-retrying login...', false);
                         handleLoginAttempt(); 
                     } else {
-                        // On a manual failure (like bad password), this will be the last status shown.
                         setStatus('New CAPTCHA solved. Please try again.', false);
                         passwordInput.focus();
                     }
@@ -144,20 +141,22 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.status === 'success') {
                 setStatus('Success! Redirecting...', false);
                 localStorage.setItem('vtop_session_id', data.session_id);
-                window.location.href = '/';
+                
+                // --- CHANGED HERE: Handle Admin Redirect ---
+                if (data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    window.location.href = '/';
+                }
             
             } else if (data.status === 'invalid_captcha') {
-                // CAPTCHA FAILED - This is a solver error, so AUTO-RETRY.
-                // We keep the button spinner on.
                 setStatus(data.message + " Auto-retrying with new CAPTCHA...", true);
-                preFetchCaptcha(true); // 'true' triggers auto-submit
+                preFetchCaptcha(true); 
             
             } else {
-                // ALL OTHER ERRORS (invalid_credentials, max_attempts, etc.)
-                // This is a user error. STOP, show the error, and get a new CAPTCHA.
-                setStatus(data.message, true); // <-- This now correctly displays the error.
-                setButtonLoading(false); // Stop the spinner.
-                preFetchCaptcha(false); // 'false' just gets a new CAPTCHA and stops.
+                setStatus(data.message, true); 
+                setButtonLoading(false); 
+                preFetchCaptcha(false); 
             }
 
         } catch (error) {

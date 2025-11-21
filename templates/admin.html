@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTOP Client - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { gray: { 750: '#2d3748', 850: '#1a202c', 950: '#0d1117' } } } }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar { transition: transform 0.3s ease-in-out; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 transition-colors duration-200">
+    
+    <aside id="sidebar" class="sidebar w-64 fixed inset-y-0 left-0 z-30 overflow-y-auto shadow-xl bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <h1 class="text-2xl font-bold text-red-600 dark:text-red-400">Admin Panel</h1>
+            <div class="mt-6 flex items-center">
+                <div class="h-12 w-12 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-600 dark:text-red-300 font-bold text-xl">A</div>
+                <div class="ml-3">
+                    <p class="text-sm font-semibold text-gray-900 dark:text-white">Administrator</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">System Access</p>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="p-4 space-y-1">
+            <a href="#" class="nav-link active flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-white" data-section="overview">
+                <i data-lucide="activity" class="mr-3 h-5 w-5"></i> Overview
+            </a>
+            <a href="#" class="nav-link flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-700 hover:bg-indigo-50 dark:text-gray-300 dark:hover:bg-gray-700" data-section="logs">
+                <i data-lucide="scroll-text" class="mr-3 h-5 w-5"></i> Site Logs
+            </a>
+        </nav>
+        
+        <div class="p-4 mt-auto absolute bottom-0 w-full">
+             <a href="#" id="logoutBtn" class="flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg text-red-600 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 transition-colors w-full">
+                <i data-lucide="log-out" class="mr-2 h-4 w-4"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden bg-gray-100 dark:bg-gray-900 ml-64">
+        <header class="flex items-center justify-end px-8 py-4 bg-white border-b border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <button id="theme-toggle" class="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors focus:outline-none">
+                <i data-lucide="sun" class="h-5 w-5 hidden dark:block"></i>
+                <i data-lucide="moon" class="h-5 w-5 block dark:hidden"></i>
+            </button>
+        </header>
+
+        <div id="content" class="flex-1 p-8 overflow-y-auto">
+            
+            <div id="overview" class="page-section">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">System Overview</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-gray-500 dark:text-gray-400 font-medium">Active Sessions</h3>
+                            <i data-lucide="users" class="text-indigo-500 h-6 w-6"></i>
+                        </div>
+                        <p id="stat-active-users" class="text-3xl font-bold text-gray-900 dark:text-white">...</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-gray-500 dark:text-gray-400 font-medium">Total Site Visits</h3>
+                            <i data-lucide="globe" class="text-green-500 h-6 w-6"></i>
+                        </div>
+                        <p id="stat-total-logs" class="text-3xl font-bold text-gray-900 dark:text-white">...</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-gray-500 dark:text-gray-400 font-medium">Device Usage</h3>
+                            <i data-lucide="smartphone" class="text-purple-500 h-6 w-6"></i>
+                        </div>
+                        <p id="stat-device-usage" class="text-lg font-bold text-gray-900 dark:text-white">Loading...</p>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">User List</h3>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-750">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Username</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="logs" class="page-section hidden">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Detailed Logs</h2>
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-750">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Time</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Method</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Endpoint</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">IP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="log-table-body" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 font-mono text-sm">
+                             </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='admin.js') }}"></script>
+</body>
+</html>
