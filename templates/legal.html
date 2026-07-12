@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Legal - VtopC</title>
-    <meta name="description" content="Privacy Policy and Terms of Service for VtopC.">
+    <meta name="description" content="Privacy, terms, disclaimer, and contact information for VtopC.">
     <script src="{{ url_for('static', filename='tailwind.js') }}"></script>
     <script>
         tailwind.config = { darkMode: 'class' }
@@ -16,7 +16,7 @@
         }
     </script>
     <script src="{{ url_for('static', filename='lucide.js') }}"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -24,211 +24,135 @@
     </style>
 </head>
 
-<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 min-h-screen">
-    <main class="max-w-5xl mx-auto px-5 py-8 sm:py-10">
+<body class="min-h-screen bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+    <main class="mx-auto max-w-4xl px-5 py-8 sm:py-12">
         <header class="mb-6 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <a href="{{ url_for('index') }}"
-                    class="inline-flex items-center gap-2 text-2xl font-bold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors">
+                    class="inline-flex items-center gap-2 text-2xl font-bold text-indigo-600 transition-colors hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300">
                     <i data-lucide="graduation-cap" class="h-6 w-6"></i>
-                    <span>VTOP Client</span>
+                    <span>VtopC</span>
                 </a>
                 <a href="{{ url_for('index') }}"
                     class="inline-flex w-fit items-center rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-indigo-50 hover:text-indigo-600 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white">
-                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i> Dashboard
+                    <i data-lucide="arrow-left" class="mr-2 h-4 w-4"></i>
+                    Dashboard
                 </a>
             </div>
+
             <div class="mt-5 border-t border-gray-200 pt-5 dark:border-gray-700">
                 <p class="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">Legal</p>
-                <h1 class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">Policies & Contact</h1>
-                <p class="mt-2 max-w-3xl text-sm leading-6 text-gray-600 dark:text-gray-300">
-                    Privacy, terms, and project contact details for VtopC.
+                <h1 class="mt-2 text-3xl font-extrabold text-gray-900 dark:text-white">Privacy, Terms & Disclaimer</h1>
+                <p class="mt-2 max-w-2xl text-sm leading-6 text-gray-600 dark:text-gray-300">
+                    A short, plain-English summary of how VtopC works and what you agree to when using it.
                 </p>
             </div>
         </header>
 
-        <article class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm p-6 sm:p-8">
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Last updated: June 1, 2026</p>
-            
-            <!-- Privacy Policy Section -->
-            <section class="mb-12">
-                <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Privacy Policy</h1>
-                <p class="text-gray-600 dark:text-gray-300 mb-6">
-                    VtopC is an independent student dashboard made by AIP. This Privacy Policy explains how the application handles information when you use it to access VTOP-related academic data.
-                </p>
+        <article class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-8">
+            <p class="mb-8 text-sm text-gray-500 dark:text-gray-400">Last updated: July 12, 2026</p>
 
-                <div class="space-y-5 text-sm leading-6 text-gray-600 dark:text-gray-300">
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Information We Process</h2>
-                        <p>When you log in, VtopC processes your VTOP username, password, CAPTCHA result, session identifier, academic records, timetable, attendance, marks, exam schedule, profile details, and related dashboard data needed to provide the service. We do not track users across sessions, create behavioral profiles, or share analytics with any third party beyond what third-party services handle under their own policies.</p>
+            <section class="mb-8 rounded-xl border border-indigo-100 bg-indigo-50 p-5 dark:border-indigo-900/50 dark:bg-indigo-900/20">
+                <div class="flex items-start gap-3">
+                    <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/50">
+                        <i data-lucide="info" class="h-5 w-5 text-indigo-600 dark:text-indigo-300"></i>
                     </div>
-
                     <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">How Information Is Stored</h2>
-                        <p>VTOP session data is stored temporarily in server memory. Your browser's local storage stores settings, preferences, selected semester, cached dashboard data, and session identifiers—this data never leaves your device. Login credentials may be stored in an HttpOnly cookie to support optional auto-login. All stored data can be manually cleared anytime through your browser or within the app.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">How Information Is Used</h2>
-                        <p>Information is used solely to authenticate with VTOP, fetch your academic data, display dashboard features, calculate attendance insights, maintain session continuity, and improve your user experience. We do not use data for profiling, marketing, or any purpose beyond providing the core service.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Analytics and Cookies</h2>
-                        <p>VtopC may use analytics services provided by third parties like Google and Vercel for performance monitoring and educational purposes only. These services operate under their own privacy policies. Analytics data is used to understand usage patterns and improve the application, not to track individual users. You can clear all cookies in your browser settings at any time.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Notifications and Background Processes</h2>
-                        <p>VtopC does not send push notifications, background alerts, or maintain background processes that monitor your behavior. All notifications are displayed within the app interface only when you're actively using it.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Third-Party Services</h2>
-                        <p>VtopC communicates with VTOP systems to retrieve your academic data. Some optional features may use services such as Firebase, Supabase, or other configured backends. These services process data according to their own privacy policies, which we encourage you to review.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Data Sharing and Non-Monetization</h2>
-                        <p>VtopC is a free, non-commercial project. We do not sell, trade, or monetize any personal information. Data is sent only to VTOP and configured backend services as needed to deliver the features you've enabled. No data is shared with advertisers, marketing partners, or any other third parties for commercial purposes.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Open Source</h2>
-                        <p>VtopC is an open-source project created for learning and experimentation. The source code is publicly available for anyone to review, modify, and contribute to through the project's GitHub repository. Community contributions do not affect your privacy or transmit your data externally.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Your Privacy Choices</h2>
-                        <p>You can log out to clear the active server session and saved credentials. You can also clear your browser's local storage and cookies for this site to remove all cached data, preferences, and session information. These actions can be performed anytime through your browser settings or the app's interface.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Security</h2>
-                        <p>VtopC uses server-side sessions and HttpOnly cookies where applicable to protect your data. However, no system can guarantee absolute security. We recommend using VtopC only on trusted devices and networks, and you are responsible for keeping your VTOP credentials safe.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Disclaimer</h2>
-                        <p>VtopC is provided on an "as-is" basis with no guarantees of accuracy, reliability, or availability. We are not responsible for data inaccuracies, login failures, or service interruptions caused by VTOP updates or other external factors. Always verify critical information directly with VTOP or your institution.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Changes to This Policy</h2>
-                        <p>This Privacy Policy may be updated periodically to reflect improvements or changes in how we handle data. Continued use of VtopC after updates constitutes your acceptance of the revised policy.</p>
-                    </div>
-
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Contact</h2>
-                        <p>For privacy questions or concerns, use the contact details listed below.</p>
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white">Independent Student Project</h2>
+                        <p class="mt-2 text-sm leading-6 text-gray-700 dark:text-gray-300">
+                            VtopC is an independent, open-source student dashboard for viewing VTOP data in a cleaner interface. It is not an official VIT or VTOP product, and it is not affiliated with, endorsed by, or supported by Vellore Institute of Technology.
+                        </p>
                     </div>
                 </div>
             </section>
 
-            <!-- Divider -->
-            <div class="border-t border-gray-300 dark:border-gray-600 my-12"></div>
-
-            <!-- Terms of Service Section -->
-            <section>
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Terms of Service</h2>
-                <p class="text-gray-600 dark:text-gray-300 mb-6">
-                    These Terms of Service govern your use of VtopC, an independent student dashboard made by AIP.
-                </p>
-
-                <div class="space-y-5 text-sm leading-6 text-gray-600 dark:text-gray-300">
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Acceptance of Terms</h3>
-                        <p>By accessing or using VtopC, you agree to these Terms. If you do not agree, do not use the application.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Independent Service</h3>
-                        <p>VtopC is not an official VIT or VTOP product. It is an independent interface created for learning and experimentation that helps users view and organize data from VTOP and related services. This app is in no way affiliated with, endorsed by, or supported by Vellore Institute of Technology (VIT) or any of its departments.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">User Responsibilities</h3>
-                        <p>You are responsible for using your own account credentials lawfully, keeping your device secure, and ensuring your use of VtopC complies with applicable institutional rules and laws. You are solely responsible for the use of your VTOP credentials within this app.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Permitted Use</h3>
-                        <p>You may use VtopC for personal academic access, organization, and dashboard convenience. You must not misuse the service, attempt unauthorized access, scrape abusively, interfere with VTOP systems, or use another person's account without permission.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Accuracy and Availability</h3>
-                        <p>VtopC depends on VTOP and network availability. Data may be delayed, unavailable, cached, incomplete, or different from the official VTOP portal. For official decisions, always verify information directly with VTOP or the institution.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Warranty</h3>
-                        <p>VtopC is provided on an "as is" and "as available" basis without warranties of any kind. The maintainers do not guarantee uninterrupted access, error-free operation, or suitability for a particular purpose.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Limitation of Liability</h3>
-                        <p>To the maximum extent permitted by law, AIP and the project maintainers are not liable for losses, damages, missed deadlines, academic consequences, account issues, data inaccuracies, or service interruptions arising from use of VtopC or VTOP system changes.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Free and Non-Commercial</h3>
-                        <p>VtopC is a free and non-commercial project. The developer does not earn revenue, display advertisements, sell data, or monetize the service in any way. The app is provided purely for fun, learning, and experimentation purposes.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Open Source</h3>
-                        <p>VtopC is an open-source project. The source code is publicly available, and anyone is welcome to explore, modify, or contribute improvements through the project's GitHub repository. Contributions are voluntary and governed by the project's open-source license.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Changes to Terms</h3>
-                        <p>These Terms may be updated as the project evolves. Continued use after changes means you accept the updated Terms.</p>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Contact</h3>
-                        <p>For Terms-related questions, use the contact details listed below.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Contact Section -->
-            <section class="mt-12 border-t border-gray-300 pt-10 dark:border-gray-600">
-                <div class="mb-6">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">Contact Us</h2>
-                    <p class="text-sm leading-6 text-gray-600 dark:text-gray-300">
-                        Reach the project maintainers for privacy, terms, or project-related questions.
+            <div class="space-y-8 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                <section>
+                    <h2 class="mb-3 flex items-center text-xl font-bold text-gray-900 dark:text-white">
+                        <i data-lucide="shield" class="mr-2 h-5 w-5 text-indigo-500"></i>
+                        Privacy
+                    </h2>
+                    <p>
+                        VtopC uses your VTOP credentials only to log in to VTOP and fetch the academic data you request, such as attendance, marks, grades, timetable, exam schedule, profile, and room details. Session data is used to keep the dashboard working while you are signed in.
                     </p>
-                </div>
+                    <p class="mt-3">
+                        We do not sell your data, run ads, create marketing profiles, or share your academic data with advertisers. Some settings, cached dashboard data, and preferences may be stored in your browser so the app feels faster and remembers your choices.
+                    </p>
+                </section>
 
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-5 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900/40">
-                        <div class="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/30">
-                            <i data-lucide="mail" class="h-5 w-5 text-indigo-600 dark:text-indigo-400"></i>
-                        </div>
-                        <a href="mailto:vedantjja@gmail.com" class="break-all text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400">
-                            vedantjja@gmail.com
-                        </a>
-                    </div>
+                <section>
+                    <h2 class="mb-3 flex items-center text-xl font-bold text-gray-900 dark:text-white">
+                        <i data-lucide="database" class="mr-2 h-5 w-5 text-indigo-500"></i>
+                        Storage & Security
+                    </h2>
+                    <p>
+                        VtopC may use server-side sessions, cookies, browser local storage, and configured backend services only as needed to provide app features. You can log out and clear your browser storage or cookies at any time.
+                    </p>
+                    <p class="mt-3">
+                        We try to handle data carefully, but no website can promise perfect security. Use VtopC only on trusted devices and networks, and keep your VTOP credentials private.
+                    </p>
+                </section>
 
-                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-5 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900/40">
-                        <div class="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
-                            <i data-lucide="mail" class="h-5 w-5 text-blue-600 dark:text-blue-400"></i>
-                        </div>
-                        <a href="mailto:kumar.shaurya1307@gmail.com" class="break-all text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
-                            kumar.shaurya1307@gmail.com
-                        </a>
-                    </div>
+                <section>
+                    <h2 class="mb-3 flex items-center text-xl font-bold text-gray-900 dark:text-white">
+                        <i data-lucide="check-circle" class="mr-2 h-5 w-5 text-indigo-500"></i>
+                        Responsible Use
+                    </h2>
+                    <p>
+                        Use VtopC only with your own VTOP account and for personal academic convenience. Do not use someone else's credentials, attempt unauthorized access, overload VTOP systems, bypass security controls, or use the app in a way that violates institutional rules or applicable law.
+                    </p>
+                </section>
 
-                    <div class="rounded-xl border border-gray-200 bg-gray-50 p-5 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900/40">
-                        <div class="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30">
-                            <i data-lucide="mail" class="h-5 w-5 text-purple-600 dark:text-purple-400"></i>
-                        </div>
-                        <a href="mailto:rajarshisaha123.4@gmail.com" class="break-all text-sm font-medium text-purple-600 hover:underline dark:text-purple-400">
-                            rajarshisaha123.4@gmail.com
-                        </a>
-                    </div>
+                <section>
+                    <h2 class="mb-3 flex items-center text-xl font-bold text-gray-900 dark:text-white">
+                        <i data-lucide="alert-triangle" class="mr-2 h-5 w-5 text-indigo-500"></i>
+                        Accuracy & Availability
+                    </h2>
+                    <p>
+                        VtopC depends on VTOP, network access, and page formats that may change. Data may be delayed, unavailable, cached, incomplete, or parsed incorrectly. For official decisions, fees, exams, attendance, grades, deadlines, and records, always verify directly on the official VTOP portal or with the institution.
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="mb-3 flex items-center text-xl font-bold text-gray-900 dark:text-white">
+                        <i data-lucide="file-text" class="mr-2 h-5 w-5 text-indigo-500"></i>
+                        Terms
+                    </h2>
+                    <p>
+                        VtopC is provided free of charge on an "as is" and "as available" basis. The maintainers do not guarantee uninterrupted service, error-free data, or fitness for any particular purpose. By using VtopC, you accept responsibility for how you use it and agree that the maintainers are not liable for academic consequences, account issues, data errors, outages, or losses caused by using the app or by VTOP changes.
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="mb-3 flex items-center text-xl font-bold text-gray-900 dark:text-white">
+                        <i data-lucide="refresh-cw" class="mr-2 h-5 w-5 text-indigo-500"></i>
+                        Changes
+                    </h2>
+                    <p>
+                        This page may be updated as VtopC evolves. Continued use after updates means you accept the updated legal terms.
+                    </p>
+                </section>
+            </div>
+
+            <section class="mt-10 border-t border-gray-200 pt-8 dark:border-gray-700">
+                <h2 class="mb-3 text-xl font-bold text-gray-900 dark:text-white">Contact</h2>
+                <p class="mb-5 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                    For privacy, terms, or project questions, contact the maintainers.
+                </p>
+
+                <div class="grid gap-3 sm:grid-cols-3">
+                    <a href="mailto:vedantjja@gmail.com"
+                        class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-50 hover:underline dark:border-gray-700 dark:bg-gray-900/40 dark:text-indigo-400">
+                        vedantjja@gmail.com
+                    </a>
+                    <a href="mailto:kumar.shaurya1307@gmail.com"
+                        class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-50 hover:underline dark:border-gray-700 dark:bg-gray-900/40 dark:text-indigo-400">
+                        kumar.shaurya1307@gmail.com
+                    </a>
+                    <a href="mailto:rajarshisaha123.4@gmail.com"
+                        class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-50 hover:underline dark:border-gray-700 dark:bg-gray-900/40 dark:text-indigo-400">
+                        rajarshisaha123.4@gmail.com
+                    </a>
                 </div>
             </section>
         </article>

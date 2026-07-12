@@ -1,72 +1,240 @@
 <section>
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <h2 class="text-3xl font-bold text-gray-800 dark:text-white border-b-4 border-indigo-500 inline-block pb-2">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white border-b-4 border-indigo-500 inline-block pb-2">
             Grades History
         </h2>
     </div>
 
     {% if data.grades %}
-        
         {% if data.gpa %}
-        <div class="mb-8 bg-gradient-to-r from-indigo-500 to-indigo-700 rounded-xl p-6 shadow-sm text-white flex items-center justify-between border border-indigo-600">
+        <div class="mb-6 sm:mb-8 bg-gradient-to-r from-indigo-500 to-indigo-700 rounded-xl p-4 sm:p-6 shadow-sm text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-indigo-600">
             <div>
                 <h3 class="text-sm font-semibold opacity-90 uppercase tracking-widest text-indigo-100 mb-1">Semester GPA</h3>
-                <p class="text-4xl font-black">{{ data.gpa }}</p>
+                <p class="text-3xl sm:text-4xl font-black">{{ data.gpa }}</p>
             </div>
-            <i data-lucide="award" class="w-12 h-12 opacity-80"></i>
+            <i data-lucide="award" class="w-10 h-10 sm:w-12 sm:h-12 opacity-80"></i>
         </div>
         {% endif %}
 
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-gray-600 dark:text-gray-300">
-                    <thead class="text-xs text-gray-500 dark:text-gray-400 uppercase bg-gray-50/50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-700">
-                        <tr>
-                            <th class="px-5 py-4 font-medium w-2/5">Course Name</th>
-                            <th class="px-4 py-4 font-medium text-center">Type</th>
-                            <th class="px-4 py-4 font-medium text-center">Credits</th>
-                            <th class="px-4 py-4 font-medium text-center">Score</th>
-                            <th class="px-5 py-4 font-medium text-right">Grade</th>
+            <div class="hidden md:block overflow-x-auto">
+                <table class="w-full min-w-[1120px] text-sm text-left text-gray-700 dark:text-gray-300 border-collapse">
+                    <thead class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/40">
+                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                            <th rowspan="2" class="px-4 py-4 font-semibold w-16">Sl.No.</th>
+                            <th rowspan="2" class="px-4 py-4 font-semibold">Course Code</th>
+                            <th rowspan="2" class="px-4 py-4 font-semibold min-w-72">Course Title</th>
+                            <th rowspan="2" class="px-4 py-4 font-semibold min-w-56">Course Type</th>
+                            <th colspan="4" class="px-4 py-2 font-semibold text-center border-x border-gray-200 dark:border-gray-700">Credits</th>
+                            <th rowspan="2" class="px-4 py-4 font-semibold">Grading Type</th>
+                            <th rowspan="2" class="px-4 py-4 font-semibold">Grand Total</th>
+                            <th rowspan="2" class="px-4 py-4 font-semibold">Grade</th>
+                            <th rowspan="2" class="px-4 py-4 font-semibold text-center">View Mark</th>
+                        </tr>
+                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                            <th class="px-3 py-2 font-semibold text-center border-l border-gray-200 dark:border-gray-700">L</th>
+                            <th class="px-3 py-2 font-semibold text-center">P</th>
+                            <th class="px-3 py-2 font-semibold text-center">J</th>
+                            <th class="px-3 py-2 font-semibold text-center border-r border-gray-200 dark:border-gray-700">C</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700/50">
-                        {% for item in data.grades %}
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
-                            <td class="px-5 py-4">
-                                <div class="flex flex-col">
-                                    <span class="font-bold text-gray-900 dark:text-white mb-1">{{ item.title }}</span>
-                                    <span class="text-xs font-mono bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded w-fit">
-                                        {{ item.code }}
-                                    </span>
-                                </div>
+
+                    {% for item in data.grades %}
+                    <tbody x-data="{ open: false }" class="border-b border-gray-100 dark:border-gray-700/70">
+                        <tr class="bg-white dark:bg-gray-800 hover:bg-indigo-50/40 dark:hover:bg-gray-700/30 transition-colors">
+                            <td class="px-4 py-4 text-gray-500 dark:text-gray-400">{{ item.sl_no }}</td>
+                            <td class="px-4 py-4">
+                                <span class="text-xs font-mono bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">{{ item.code }}</span>
                             </td>
-                            <td class="px-4 py-4 text-center"><span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ item.type }}</span></td>
-                            <td class="px-4 py-4 text-center"><span class="font-semibold text-gray-700 dark:text-gray-300">{{ item.credits }}</span></td>
-                            <td class="px-4 py-4 text-center">
-                                <span class="font-semibold text-gray-900 dark:text-white">{{ item.total }}</span>
-                                <span class="text-[10px] text-gray-400 dark:text-gray-500 block">/ 100</span>
+                            <td class="px-4 py-4 font-bold text-gray-900 dark:text-white">{{ item.title }}</td>
+                            <td class="px-4 py-4">
+                                <span class="text-xs font-medium text-gray-600 dark:text-gray-300">{{ item.type }}</span>
                             </td>
-                            <td class="px-5 py-4 text-right">
-                                <span class="inline-flex items-center justify-center px-3 py-1 rounded-md font-bold text-sm
+                            <td class="px-3 py-4 text-center border-l border-gray-100 dark:border-gray-700">{{ item.l }}</td>
+                            <td class="px-3 py-4 text-center">{{ item.p }}</td>
+                            <td class="px-3 py-4 text-center">{{ item.j }}</td>
+                            <td class="px-3 py-4 text-center border-r border-gray-100 dark:border-gray-700">
+                                <span class="font-bold text-indigo-700 dark:text-indigo-300">{{ item.credits }}</span>
+                            </td>
+                            <td class="px-4 py-4">{{ item.grading_type }}</td>
+                            <td class="px-4 py-4">
+                                <span class="font-bold text-gray-900 dark:text-white">{{ item.total }}</span>
+                            </td>
+                            <td class="px-4 py-4">
+                                <span class="inline-flex items-center justify-center min-w-9 px-2.5 py-1 rounded-md font-bold text-sm
                                     {% if item.grade == 'S' or item.grade == 'A' %}
-                                        bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800
+                                        bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
                                     {% elif item.grade == 'B' or item.grade == 'C' %}
-                                        bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800
+                                        bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
                                     {% elif item.grade == 'D' or item.grade == 'E' %}
-                                        bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800
+                                        bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400
                                     {% elif item.grade == 'F' or item.grade == 'N' %}
-                                        bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800
+                                        bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400
                                     {% else %}
-                                        bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400 border border-gray-200 dark:border-gray-700
+                                        bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300
                                     {% endif %}
-                                ">
-                                    {{ item.grade }}
+                                ">{{ item.grade }}</span>
+                            </td>
+                            <td class="px-4 py-4 text-center">
+                                {% if item.grade_statistics %}
+                                <button type="button" @click="open = !open"
+                                    class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                                    :aria-expanded="open.toString()">
+                                    <i x-show="!open" data-lucide="plus" class="w-4 h-4"></i>
+                                    <i x-show="open" data-lucide="minus" class="w-4 h-4"></i>
+                                </button>
+                                {% else %}
+                                <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500">
+                                    <i data-lucide="minus" class="w-4 h-4"></i>
                                 </span>
+                                {% endif %}
                             </td>
                         </tr>
-                        {% endfor %}
+
+                        {% if item.grade_statistics %}
+                        <tr x-show="open" x-cloak class="bg-white dark:bg-gray-800">
+                            <td colspan="12" class="px-6 py-6 bg-gray-50/60 dark:bg-gray-900/20">
+                                <div class="mx-auto max-w-6xl overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+                                    <table class="w-full text-sm text-center border-collapse">
+                                        <thead>
+                                            <tr class="bg-gray-100 text-gray-600 dark:bg-gray-900/50 dark:text-gray-300">
+                                                <th rowspan="2" class="px-4 py-3 border border-gray-200 dark:border-gray-700 font-semibold">Class Strength</th>
+                                                <th rowspan="2" class="px-4 py-3 border border-gray-200 dark:border-gray-700 font-semibold">Grading Strength</th>
+                                                <th rowspan="2" class="px-4 py-3 border border-gray-200 dark:border-gray-700 font-semibold">Mean</th>
+                                                <th rowspan="2" class="px-4 py-3 border border-gray-200 dark:border-gray-700 font-semibold">SD</th>
+                                                <th colspan="7" class="px-4 py-3 border border-gray-200 dark:border-gray-700 font-semibold text-indigo-700 dark:text-indigo-300">Range of Grades</th>
+                                            </tr>
+                                            <tr class="bg-gray-50 text-gray-500 dark:bg-gray-900/30 dark:text-gray-400">
+                                                {% for range_item in item.grade_statistics.ranges %}
+                                                <th class="px-4 py-3 border border-gray-200 dark:border-gray-700 font-semibold">{{ range_item.grade }}</th>
+                                                {% endfor %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="px-4 py-3 border border-gray-200 dark:border-gray-700">{{ item.grade_statistics.stats.class_strength }}</td>
+                                                <td class="px-4 py-3 border border-gray-200 dark:border-gray-700">{{ item.grade_statistics.stats.grading_strength }}</td>
+                                                <td class="px-4 py-3 border border-gray-200 dark:border-gray-700">{{ item.grade_statistics.stats.mean }}</td>
+                                                <td class="px-4 py-3 border border-gray-200 dark:border-gray-700">{{ item.grade_statistics.stats.sd }}</td>
+                                                {% for range_item in item.grade_statistics.ranges %}
+                                                <td class="px-4 py-3 border border-gray-200 dark:border-gray-700
+                                                    {% if range_item.grade == item.grade %}
+                                                        bg-indigo-50 font-bold text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300
+                                                    {% endif %}
+                                                ">
+                                                    {{ range_item.range }}
+                                                </td>
+                                                {% endfor %}
+                                            </tr>
+                                            {% if item.grade_statistics.note %}
+                                            <tr>
+                                                <td colspan="11" class="px-4 py-3 text-center text-red-600 dark:text-red-400 font-medium">
+                                                    {{ item.grade_statistics.note }}
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
                     </tbody>
+                    {% endfor %}
                 </table>
+            </div>
+
+            <div class="md:hidden divide-y divide-gray-100 dark:divide-gray-700">
+                {% for item in data.grades %}
+                <div x-data="{ open: false }" class="p-4">
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="text-xs font-mono bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">{{ item.code }}</span>
+                                <span class="inline-flex items-center justify-center min-w-9 px-2.5 py-1 rounded-md font-bold text-sm
+                                    {% if item.grade == 'S' or item.grade == 'A' %}
+                                        bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400
+                                    {% elif item.grade == 'B' or item.grade == 'C' %}
+                                        bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400
+                                    {% elif item.grade == 'D' or item.grade == 'E' %}
+                                        bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400
+                                    {% elif item.grade == 'F' or item.grade == 'N' %}
+                                        bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400
+                                    {% else %}
+                                        bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300
+                                    {% endif %}
+                                ">{{ item.grade }}</span>
+                            </div>
+                            <p class="mt-2 font-semibold text-gray-900 dark:text-white">{{ item.title }}</p>
+                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ item.type }} · {{ item.grading_type }}</p>
+                        </div>
+                        {% if item.grade_statistics %}
+                        <button type="button" @click="open = !open"
+                            class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                            :aria-expanded="open.toString()">
+                            <i x-show="!open" data-lucide="plus" class="w-4 h-4"></i>
+                            <i x-show="open" data-lucide="minus" class="w-4 h-4"></i>
+                        </button>
+                        {% else %}
+                        <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500">
+                            <i data-lucide="minus" class="w-4 h-4"></i>
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+                        <div class="rounded-lg bg-gray-50 dark:bg-gray-700/40 p-3">
+                            <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Credits</p>
+                            <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ item.credits }}</p>
+                        </div>
+                        <div class="rounded-lg bg-gray-50 dark:bg-gray-700/40 p-3">
+                            <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Grand Total</p>
+                            <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ item.total }}</p>
+                        </div>
+                    </div>
+
+                    {% if item.grade_statistics %}
+                    <div x-show="open" x-cloak class="mt-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50/70 dark:bg-gray-900/20 p-3 text-sm">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Class Strength</p>
+                                <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ item.grade_statistics.stats.class_strength }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Grading Strength</p>
+                                <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ item.grade_statistics.stats.grading_strength }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Mean</p>
+                                <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ item.grade_statistics.stats.mean }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">SD</p>
+                                <p class="mt-1 font-semibold text-gray-900 dark:text-white">{{ item.grade_statistics.stats.sd }}</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 overflow-x-auto">
+                            <div class="flex flex-wrap gap-2">
+                                {% for range_item in item.grade_statistics.ranges %}
+                                <div class="min-w-[72px] rounded-lg border border-gray-200 dark:border-gray-700 px-2 py-2 text-center text-xs
+                                    {% if range_item.grade == item.grade %}
+                                        bg-indigo-100 font-bold text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300
+                                    {% else %}
+                                        bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300
+                                    {% endif %}">
+                                    <p class="font-semibold">{{ range_item.grade }}</p>
+                                    <p class="mt-1 text-[11px]">{{ range_item.range }}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% if item.grade_statistics.note %}
+                        <p class="mt-3 text-xs text-red-600 dark:text-red-400">{{ item.grade_statistics.note }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
             </div>
         </div>
     {% else %}

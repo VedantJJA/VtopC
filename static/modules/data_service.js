@@ -8,6 +8,13 @@ function getStorageKey(target, params = {}) {
     return key;
 }
 
+function hydrateInjectedContent(container) {
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+    if (container && window.Alpine && typeof window.Alpine.initTree === 'function') {
+        window.Alpine.initTree(container);
+    }
+}
+
 function loadFromCache(target, container, params) {
     const cacheKey = getStorageKey(target, params);
     const cachedString = localStorage.getItem(cacheKey);
@@ -19,7 +26,7 @@ function loadFromCache(target, container, params) {
 
             if (container) {
                 container.innerHTML = cachedData.html_content;
-                if (typeof lucide !== 'undefined') lucide.createIcons();
+                hydrateInjectedContent(container);
             }
 
             if (target === TARGETS.ATTENDANCE && cachedData.raw_data) {
@@ -143,7 +150,7 @@ export async function fetchAndDisplay(target, containerElement, title, extraPara
 
             if (containerElement && !returnDataOnly) {
                 containerElement.innerHTML = data.html_content;
-                if (typeof lucide !== 'undefined') lucide.createIcons();
+                hydrateInjectedContent(containerElement);
             }
 
             if (target === TARGETS.ATTENDANCE && data.raw_data) state.setAttendance(data.raw_data);
