@@ -47,7 +47,6 @@ VtopC/
 
 - Python 3.10+
 - A Firebase project
-- A Supabase project
 
 ### Steps
 
@@ -62,23 +61,7 @@ VtopC/
    pip install -r requirements.txt
    ```
 
-3. Create a `.env` file in the root directory with the following variables:
-   ```env
-   SECRET_KEY=your_strong_random_secret_key
-
-   FIREBASE_API_KEY=
-   FIREBASE_AUTH_DOMAIN=
-   FIREBASE_PROJECT_ID=
-   FIREBASE_STORAGE_BUCKET=
-   FIREBASE_MESSAGING_SENDER_ID=
-   FIREBASE_APP_ID=
-
-   SUPABASE_URL=
-   SUPABASE_ANON_KEY=
-   SUPABASE_KEY=
-   ```
-
-4. Run the development server:
+3. Run the development server:
    ```bash
    python app.py
    ```
@@ -132,7 +115,6 @@ requests
 beautifulsoup4
 gunicorn
 whitenoise
-supabase
 python-dotenv
 PyJWT
 ```

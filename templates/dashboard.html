@@ -37,7 +37,90 @@
             }
         }
     </script>
-    
+    <style>
+        html.theme-pink {
+            color-scheme: light;
+        }
+
+        html.theme-pink body {
+            background-color: #fff1f8;
+            color: #45193a;
+        }
+
+        html.theme-pink .bg-white {
+            background-color: #fff7fb !important;
+        }
+
+        html.theme-pink .bg-gray-50,
+        html.theme-pink .bg-blue-50 {
+            background-color: #fff0f6 !important;
+        }
+
+        html.theme-pink .bg-gray-100,
+        html.theme-pink .bg-blue-100 {
+            background-color: #fde6f0 !important;
+        }
+
+        html.theme-pink .bg-gray-200,
+        html.theme-pink .bg-blue-200 {
+            background-color: #f9d3e3 !important;
+        }
+
+        html.theme-pink .border-gray-100,
+        html.theme-pink .border-gray-200,
+        html.theme-pink .border-blue-100 {
+            border-color: #f5d1e1 !important;
+        }
+
+        html.theme-pink .text-gray-900,
+        html.theme-pink .text-gray-800,
+        html.theme-pink .text-gray-700,
+        html.theme-pink .text-blue-900 {
+            color: #45193a !important;
+        }
+
+        html.theme-pink .text-gray-500,
+        html.theme-pink .text-gray-400,
+        html.theme-pink .text-gray-300,
+        html.theme-pink .text-blue-600 {
+            color: #7e5574 !important;
+        }
+
+        html.theme-pink .text-blue-500,
+        html.theme-pink .text-blue-400,
+        html.theme-pink .text-blue-300,
+        html.theme-pink .text-pink-600,
+        html.theme-pink .text-pink-500 {
+            color: #d63384 !important;
+        }
+
+        html.theme-pink .bg-blue-600,
+        html.theme-pink .bg-blue-500,
+        html.theme-pink .bg-pink-600,
+        html.theme-pink .bg-pink-500 {
+            background-color: #d63384 !important;
+        }
+
+        html.theme-pink .hover\:bg-blue-50:hover,
+        html.theme-pink .hover\:bg-gray-50:hover,
+        html.theme-pink .hover\:bg-gray-100:hover,
+        html.theme-pink .hover\:bg-pink-50:hover {
+            background-color: #ffe6f4 !important;
+        }
+
+        html.theme-pink .hover\:text-blue-600:hover,
+        html.theme-pink .hover\:text-blue-700:hover,
+        html.theme-pink .hover\:text-blue-500:hover,
+        html.theme-pink .hover\:text-pink-600:hover {
+            color: #b91c6a !important;
+        }
+
+        html.theme-pink .ring-blue-500,
+        html.theme-pink .focus\:ring-blue-500:focus,
+        html.theme-pink .focus\:ring-pink-500:focus {
+            --tw-ring-color: #d63384 !important;
+        }
+    </style>
 
     <script src="{{ url_for('static', filename='lucide.js') }}"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -56,7 +139,6 @@
         <div class="p-5 pb-4">
             <a href="#" id="brand-dashboard-link"
                 class="inline-flex items-center gap-2 text-lg font-bold text-gray-900 dark:text-white hover:opacity-80 transition-opacity">
-                <i data-lucide="graduation-cap" class="h-5 w-5 text-blue-600 dark:text-blue-400"></i>
                 <span>VTOP Client</span>
             </a>
         </div>
@@ -206,10 +288,9 @@
                 </button>
             </div>
             <div class="flex items-center space-x-2">
-                <button id="theme-toggle"
+                <button id="theme-toggle" title="Switch theme"
                     class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors focus:outline-none">
-                    <i data-lucide="sun" class="h-5 w-5 hidden dark:block"></i>
-                    <i data-lucide="moon" class="h-5 w-5 block dark:hidden"></i>
+                    <i id="theme-icon" data-lucide="sun" class="h-5 w-5"></i>
                 </button>
             </div>
         </header>
@@ -218,16 +299,17 @@
 
             <div id="dashboard" class="page-section section-enter">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Dashboard</h2>
+                    <div class="flex items-center">
+                        <h2 id="dashboard-title" class="text-2xl font-bold text-gray-800 dark:text-white">Dashboard</h2>
+                    </div>
                     <span class="text-sm text-gray-500 dark:text-gray-400 font-medium" id="current-date-display"></span>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
                     <!-- Snapshot Card -->
-                    <div class="lg:col-span-1 bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700/60 shadow-sm flex flex-col h-full">
+                    <div class="lg:col-span-1 bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-100 dark:border-gray-700/60 shadow-sm flex flex-col self-start">
                         <div class="flex items-center gap-2 mb-5">
-                            <i data-lucide="activity" class="w-4 h-4 text-blue-500"></i>
                             <span class="text-sm font-medium text-gray-900 dark:text-white">Snapshot</span>
                         </div>
                         

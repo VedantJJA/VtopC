@@ -1,3 +1,5 @@
+import { state } from '../modules/state.js';
+
 export function showPageSection(sectionId, pageSections, navLinks, academicsToggle, examinationsToggle, extraToggle, myInfoToggle) {
     pageSections.forEach(section => {
         section.style.display = section.id === sectionId ? 'block' : 'none';
@@ -61,8 +63,9 @@ let currentDayOffset = 0;
 
 export function navigateSchedule(direction) {
     const container = document.getElementById('today-schedule-container');
-    if (!container || !currentTimetableData) return;
-    populateTodaySchedule(currentTimetableData, container, currentDayOffset + direction);
+    const timetableData = currentTimetableData || state.cachedTimetable;
+    if (!container || !timetableData) return;
+    populateTodaySchedule(timetableData, container, currentDayOffset + direction);
 }
 
 // Make it globally available for inline onclick handlers
@@ -70,7 +73,8 @@ window.navigateSchedule = navigateSchedule;
 
 export function populateTodaySchedule(timetableData, container, dayOffset = 0) {
     if (timetableData) currentTimetableData = timetableData;
-    if (!currentTimetableData) { 
+    const scheduleData = currentTimetableData || state.cachedTimetable;
+    if (!scheduleData) { 
         container.innerHTML = '<p class="text-sm text-gray-500">Could not load timetable data.</p>'; 
         return; 
     }
@@ -99,13 +103,13 @@ export function populateTodaySchedule(timetableData, container, dayOffset = 0) {
     }
     
 
-    if (!currentTimetableData[targetDayString]) {
+    if (!scheduleData[targetDayString]) {
          container.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400 p-2">No classes scheduled.</p>';
          if (typeof lucide !== 'undefined') lucide.createIcons();
          return;
     }
     
-    const todaySchedule = currentTimetableData[targetDayString];
+    const todaySchedule = scheduleData[targetDayString];
     const time_slot_keys = ["08:00 - 08:50", "08:55 - 09:45", "09:50 - 10:40", "10:45 - 11:35", "11:40 - 12:30", "12:35 - 13:25", "LUNCH", "14:00 - 14:50", "14:55 - 15:45", "15:50 - 16:40", "16:45 - 17:35", "17:40 - 18:30", "18:35 - 19:25"];
     let classCount = 0;
     let finalHtml = '';

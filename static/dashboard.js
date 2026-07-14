@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.calculator
     ].filter(Boolean);
 
+
     function closeSidebar() {
         if (window.innerWidth < 768) {
             elements.sidebar.classList.add('-translate-x-full');
@@ -229,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     elements.navLinks.forEach(link => {
-        if (['academics', 'examinations', 'extra', 'my-info'].includes(link.dataset.section)) return;
+        if (!link.dataset.section || ['academics', 'examinations', 'extra', 'my-info'].includes(link.dataset.section)) return;
         link.addEventListener('click', async (e) => {
             e.preventDefault();
             if (UI && UI.showPageSection) UI.showPageSection(link.dataset.section, elements.pageSections, elements.navLinks, elements.academicsToggle, elements.examinationsToggle, elements.extraToggle, elements.myInfoToggle);
@@ -322,11 +323,44 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elements.sidebarOverlay) elements.sidebarOverlay.addEventListener('click', closeSidebar);
 
     const themeToggle = document.getElementById('theme-toggle');
-    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+    const themeIcon = document.getElementById('theme-icon');
+
+    function applyTheme(theme) {
+        document.documentElement.classList.remove('dark', 'theme-pink');
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else if (theme === 'pink') {
+            document.documentElement.classList.add('theme-pink');
+        }
+
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', theme === 'pink' ? '#fdf2f8' : theme === 'dark' ? '#111827' : '#ffffff');
+        }
+
+        if (themeToggle && themeIcon) {
+            const iconName = theme === 'pink' ? 'palette' : theme === 'dark' ? 'moon' : 'sun';
+            themeIcon.setAttribute('data-lucide', iconName);
+            themeIcon.className = 'h-5 w-5';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+    }
+
+    function getStoredTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || savedTheme === 'pink' || savedTheme === 'light') return savedTheme;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    let currentTheme = getStoredTheme();
+    applyTheme(currentTheme);
+
     if (themeToggle) {
         themeToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const nextTheme = currentTheme === 'light' ? 'dark' : currentTheme === 'dark' ? 'pink' : 'light';
+            currentTheme = nextTheme;
+            localStorage.setItem('theme', nextTheme);
+            applyTheme(nextTheme);
         });
     }
 
