@@ -1,11 +1,11 @@
 window.initAttendanceCalculator = function(containerElement, cachedAttendance, cachedTimetable) {
     containerElement.innerHTML = `
     <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-b-4 border-indigo-500 inline-block pb-2">Attendance Calculator</h2>
+        <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white border-b-4 border-blue-500 inline-block pb-2">Attendance Calculator</h2>
         
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="flex border-b border-gray-200 dark:border-gray-700">
-                <button id="calc-tab-subject" class="flex-1 py-4 text-sm font-medium text-center text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 dark:text-indigo-400 transition-colors">Subject Wise</button>
+                <button id="calc-tab-subject" class="flex-1 py-4 text-sm font-medium text-center text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400 transition-colors">Subject Wise</button>
                 <button id="calc-tab-days" class="flex-1 py-4 text-sm font-medium text-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">Days / Dates</button>
             </div>
 
@@ -13,16 +13,16 @@ window.initAttendanceCalculator = function(containerElement, cachedAttendance, c
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select Subject</label>
-                        <select id="calc-subject-select" class="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500"></select>
+                        <select id="calc-subject-select" class="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"></select>
                     </div>
                     <div class="flex gap-4">
                         <div class="flex-1">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Attend Next (Sessions)</label>
-                            <input type="number" id="calc-attend" value="0" min="0" class="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                            <input type="number" id="calc-attend" value="0" min="0" class="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div class="flex-1">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Miss Next (Sessions)</label>
-                            <input type="number" id="calc-miss" value="0" min="0" class="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                            <input type="number" id="calc-miss" value="0" min="0" class="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@ window.initAttendanceCalculator = function(containerElement, cachedAttendance, c
                         </select>
                     </div>
                      <div class="flex items-end">
-                        <button id="calc-days-btn" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors shadow-sm">Calculate Prediction</button>
+                        <button id="calc-days-btn" class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-sm">Calculate Prediction</button>
                     </div>
                  </div>
                  <div id="calc-days-result" class="mt-6 hidden space-y-3"></div>
@@ -71,15 +71,15 @@ window.initAttendanceCalculator = function(containerElement, cachedAttendance, c
     function switchTab(isSubject) {
         if (isSubject) {
             viewSubject.classList.remove('hidden'); viewDays.classList.add('hidden');
-            tabSubject.classList.add('text-indigo-600', 'border-b-2', 'border-indigo-600', 'bg-indigo-50', 'dark:bg-indigo-900/20', 'dark:text-indigo-400');
+            tabSubject.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50', 'dark:bg-blue-900/20', 'dark:text-blue-400');
             tabSubject.classList.remove('text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400');
-            tabDays.classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600', 'bg-indigo-50', 'dark:bg-indigo-900/20', 'dark:text-indigo-400');
+            tabDays.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50', 'dark:bg-blue-900/20', 'dark:text-blue-400');
             tabDays.classList.add('text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400');
         } else {
             viewDays.classList.remove('hidden'); viewSubject.classList.add('hidden');
-            tabDays.classList.add('text-indigo-600', 'border-b-2', 'border-indigo-600', 'bg-indigo-50', 'dark:bg-indigo-900/20', 'dark:text-indigo-400');
+            tabDays.classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50', 'dark:bg-blue-900/20', 'dark:text-blue-400');
             tabDays.classList.remove('text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400');
-            tabSubject.classList.remove('text-indigo-600', 'border-b-2', 'border-indigo-600', 'bg-indigo-50', 'dark:bg-indigo-900/20', 'dark:text-indigo-400');
+            tabSubject.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'bg-blue-50', 'dark:bg-blue-900/20', 'dark:text-blue-400');
             tabSubject.classList.add('text-gray-500', 'hover:text-gray-700', 'dark:text-gray-400');
         }
     }

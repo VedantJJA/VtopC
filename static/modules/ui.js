@@ -40,7 +40,7 @@ export function clearAllDataContainers(containers) {
 
     if (snapshotAttPerc) snapshotAttPerc.textContent = '...';
     if (snapshotAttBar) snapshotAttBar.style.width = '0%';
-    if (snapshotOdCount) snapshotOdCount.textContent = '... / 40';
+    if (snapshotOdCount) snapshotOdCount.textContent = '...';
     if (snapshotOdBar) snapshotOdBar.style.width = '0%';
     if (todayScheduleContainer) todayScheduleContainer.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400">Loading today\'s schedule...</p>';
 }
@@ -56,20 +56,56 @@ export function showOfflineMessage(container) {
     if (container) container.prepend(msg);
 }
 
-export function populateTodaySchedule(timetableData, container) {
-    if (!timetableData) { 
+let currentTimetableData = null;
+let currentDayOffset = 0;
+
+export function navigateSchedule(direction) {
+    const container = document.getElementById('today-schedule-container');
+    if (!container || !currentTimetableData) return;
+    populateTodaySchedule(currentTimetableData, container, currentDayOffset + direction);
+}
+
+// Make it globally available for inline onclick handlers
+window.navigateSchedule = navigateSchedule;
+
+export function populateTodaySchedule(timetableData, container, dayOffset = 0) {
+    if (timetableData) currentTimetableData = timetableData;
+    if (!currentTimetableData) { 
         container.innerHTML = '<p class="text-sm text-gray-500">Could not load timetable data.</p>'; 
         return; 
     }
-    const dayMap = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-    const todayDayString = dayMap[new Date().getDay()];
     
-    if (!timetableData[todayDayString]) {
-         container.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400 p-2">No classes scheduled for today.</p>';
+    currentDayOffset = dayOffset;
+    
+    const dayMap = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    const todayIndex = new Date().getDay();
+    let targetIndex = (todayIndex + currentDayOffset) % 7;
+    if (targetIndex < 0) targetIndex += 7;
+    
+    const targetDayString = dayMap[targetIndex];
+    
+    const label = document.getElementById('schedule-day-label');
+    const liveBadge = document.getElementById('schedule-live-badge');
+    if (label) {
+        if (currentDayOffset === 0) {
+            label.textContent = "Today's Schedule";
+            if (liveBadge) liveBadge.style.display = 'inline-flex';
+        } else {
+            if (currentDayOffset === 1) label.textContent = "Tomorrow's Schedule";
+            else if (currentDayOffset === -1) label.textContent = "Yesterday's Schedule";
+            else label.textContent = targetDayString + " Schedule";
+            if (liveBadge) liveBadge.style.display = 'none';
+        }
+    }
+    
+
+    if (!currentTimetableData[targetDayString]) {
+         container.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400 p-2">No classes scheduled.</p>';
+         if (typeof lucide !== 'undefined') lucide.createIcons();
          return;
     }
     
-    const todaySchedule = timetableData[todayDayString];
+    const todaySchedule = currentTimetableData[targetDayString];
     const time_slot_keys = ["08:00 - 08:50", "08:55 - 09:45", "09:50 - 10:40", "10:45 - 11:35", "11:40 - 12:30", "12:35 - 13:25", "LUNCH", "14:00 - 14:50", "14:55 - 15:45", "15:50 - 16:40", "16:45 - 17:35", "17:40 - 18:30", "18:35 - 19:25"];
     let classCount = 0;
     let finalHtml = '';
@@ -79,10 +115,11 @@ export function populateTodaySchedule(timetableData, container) {
             classCount++;
             const course = todaySchedule[slotKey];
             const endTime = (time_slot_keys[index + course.rowspan - 1] || "N/A").split(' - ')[1];
-            finalHtml += `<div class="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"><div class="w-16 text-center border-r border-gray-200 dark:border-gray-600 pr-3"><p class="font-bold text-indigo-600 dark:text-indigo-400">${slotKey.split(' - ')[0]}</p><p class="text-xs text-gray-500 dark:text-gray-400">${endTime}</p></div><div class="ml-4 flex-grow"><p class="font-semibold text-gray-900 dark:text-white">${course.title}</p><p class="text-xs text-gray-500 dark:text-gray-400">${course.code} (${course.type})</p></div><span class="text-sm font-medium text-gray-700 dark:text-gray-300">${course.venue}</span></div>`;
+            finalHtml += `<div class="flex items-center p-3 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"><div class="w-16 text-center border-r border-gray-200 dark:border-gray-600 pr-3"><p class="font-bold text-blue-600 dark:text-blue-400">${slotKey.split(' - ')[0]}</p><p class="text-xs text-gray-500 dark:text-gray-400">${endTime}</p></div><div class="ml-4 flex-grow"><p class="font-semibold text-gray-900 dark:text-white">${course.title}</p><p class="text-xs text-gray-500 dark:text-gray-400">${course.code} (${course.type})</p></div><span class="text-sm font-medium text-gray-700 dark:text-gray-300">${course.venue}</span></div>`;
         }
     });
-    container.innerHTML = classCount === 0 ? '<p class="text-sm text-gray-500 dark:text-gray-400 p-2">No classes scheduled for today.</p>' : finalHtml;
+    container.innerHTML = classCount === 0 ? '<p class="text-sm text-gray-500 dark:text-gray-400 p-2">No classes scheduled.</p>' : finalHtml;
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 export function updateAttendanceSnapshot(data) {
@@ -98,10 +135,11 @@ export function updateAttendanceSnapshot(data) {
     let percentage = 0;
     if (totalConducted > 0) percentage = (totalAttended / totalConducted) * 100;
     if (snapshotAttPerc) {
-         // Changed to Math.floor to display lower integer value
          const p = Math.floor(percentage);
          snapshotAttPerc.textContent = `${p}%`;
-         snapshotAttBar.style.width = `${p}%`;
+         if (snapshotAttBar) {
+             snapshotAttBar.style.width = `${p}%`;
+         }
     }
 }
 
@@ -109,8 +147,11 @@ export function updateODSnapshot(data) {
     const snapshotOdCount = document.getElementById('snapshot-od-count');
     const snapshotOdBar = document.getElementById('snapshot-od-bar');
     if (snapshotOdCount) {
-        snapshotOdCount.textContent = `${data.total_od_count} / 40`;
-        snapshotOdBar.style.width = `${Math.min((data.total_od_count / 40) * 100, 100)}%`;
+        snapshotOdCount.textContent = `${data.total_od_count}`;
+        if (snapshotOdBar) {
+            const percentage = Math.min((data.total_od_count / 40) * 100, 100);
+            snapshotOdBar.style.width = `${percentage}%`;
+        }
     }
 }
 
@@ -118,7 +159,7 @@ export function openAttendanceDetailModal(modal, modalTitle, modalBody, modalCon
     modalTitle.textContent = courseTitle || "Attendance Details";
     modalBody.innerHTML = `
         <div class="flex flex-col items-center justify-center py-10">
-            <i data-lucide="loader" class="animate-spin h-8 w-8 text-indigo-500 mb-3"></i>
+            <i data-lucide="loader" class="animate-spin h-8 w-8 text-blue-500 mb-3"></i>
             <p class="text-gray-500 dark:text-gray-400">Fetching details...</p>
         </div>
     `;

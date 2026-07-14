@@ -162,7 +162,7 @@ export async function populateMyRoomData() {
         // ==========================================
         // 4. RENDER ROOMMATES UI
         // ==========================================
-        const colors = ['bg-indigo-500', 'bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-purple-500'];
+        const colors = ['bg-blue-500', 'bg-blue-500', 'bg-emerald-500', 'bg-amber-500', 'bg-rose-500', 'bg-blue-500'];
         let colorIdx = 1;
         roommatesList.forEach((r) => {
             if(r.isMe) r.color = colors[0];
@@ -170,7 +170,7 @@ export async function populateMyRoomData() {
         });
 
         document.getElementById('roommates-container').innerHTML = roommatesList.map(r => `
-            <div class="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border ${r.isMe ? 'border-indigo-500 ring-1 ring-indigo-500' : 'border-gray-100 dark:border-gray-700'}">
+            <div class="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border ${r.isMe ? 'border-blue-500 ring-1 ring-blue-500' : 'border-gray-100 dark:border-gray-700'}">
                 <div class="h-12 w-12 rounded-full ${r.color} text-white flex items-center justify-center font-bold text-lg mr-4 flex-shrink-0 uppercase">
                     ${r.name.charAt(0)}
                 </div>
@@ -182,7 +182,7 @@ export async function populateMyRoomData() {
                         ${r.phone}
                     </p>
                 </div>
-                ${r.isMe ? '<span class="ml-auto text-[10px] font-bold uppercase tracking-wider bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300 px-2 py-1 rounded">ME</span>' : ''}
+                ${r.isMe ? '<span class="ml-auto text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 px-2 py-1 rounded">ME</span>' : ''}
             </div>
         `).join('');
 

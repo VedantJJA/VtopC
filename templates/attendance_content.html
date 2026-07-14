@@ -1,21 +1,21 @@
 <section>
-    <h2 class="text-3xl font-bold mb-8 text-gray-800 dark:text-white border-b-4 border-indigo-500 inline-block pb-2">
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">
         My Attendance
     </h2>
     
     {% if courses %}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {% for course in courses %}
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md hover:border-indigo-100 dark:hover:border-indigo-900 transition-all duration-200 flex justify-between items-stretch relative overflow-hidden group">
+        <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:border-blue-100 dark:hover:border-blue-900 transition-all duration-200 flex justify-between items-stretch relative overflow-hidden group">
             
             {# --- Left Side: Info --- #}
             <div class="flex flex-col justify-between flex-1 pr-4 z-10">
                 <div>
-                    <h3 class="font-bold text-gray-800 dark:text-gray-100 text-lg leading-snug mb-2 line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" title="{{ course.course_title }}">
+                    <h3 class="font-bold text-gray-800 dark:text-gray-100 text-lg leading-snug mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" title="{{ course.course_title }}">
                         {{ course.course_title }}
                     </h3>
                     <div class="flex flex-wrap gap-2 mb-3">
-                        <span class="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-2 py-1 text-xs rounded-md font-mono font-medium border border-indigo-100 dark:border-indigo-800/50">
+                        <span class="bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 text-xs rounded-md font-mono font-medium border border-blue-100 dark:border-blue-800/50">
                             {{ course.course_code }}
                         </span>
                         <span class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 text-xs rounded-md font-medium border border-gray-200 dark:border-gray-600">
@@ -29,7 +29,7 @@
                 
                 <div class="mt-2">
                     {% if course.class_id %}
-                    <button class="view-attendance-detail inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
+                    <button class="view-attendance-detail inline-flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
                             data-class-id="{{ course.class_id }}"
                             data-slot="{{ course.slot_param }}"
                             data-course-title="{{ course.course_title }}">
@@ -50,13 +50,17 @@
                     {% set color_cls = "bg-green-500 dark:bg-green-500" %}
                     {% set text_cls = "text-green-600 dark:text-green-400" %}
                     {% set bg_cls = "bg-green-100 dark:bg-green-900/30" %}
+                {% elif pct >= 60 %}
+                    {% set color_cls = "bg-amber-500 dark:bg-amber-500" %}
+                    {% set text_cls = "text-amber-600 dark:text-amber-400" %}
+                    {% set bg_cls = "bg-amber-100 dark:bg-amber-900/30" %}
                 {% else %}
                     {% set color_cls = "bg-red-500 dark:bg-red-500" %}
                     {% set text_cls = "text-red-600 dark:text-red-400" %}
                     {% set bg_cls = "bg-red-100 dark:bg-red-900/30" %}
                 {% endif %}
 
-                <div class="relative h-24 w-3 {{ bg_cls }} rounded-full overflow-hidden flex items-end" title="{{ course.percentage }}%">
+                <div class="relative h-24 w-3 {{ bg_cls }} rounded-full overflow-hidden flex items-end shadow-inner" title="{{ course.percentage }}%">
                     <div class="{{ color_cls }} w-full rounded-full transition-all duration-1000 ease-out" style="height: {{ course.percentage }}%;"></div>
                 </div>
                 

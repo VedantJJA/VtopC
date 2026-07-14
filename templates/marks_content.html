@@ -1,5 +1,5 @@
 <section>
-    <h2 class="text-3xl font-bold mb-8 text-gray-800 dark:text-white border-b-4 border-indigo-500 inline-block pb-2">
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">
         Marks & Weightage
     </h2>
 
@@ -8,17 +8,17 @@
     <div class="mb-8">
         <div class="flex items-center justify-between mb-4">
             <h3 class="text-xl font-bold text-gray-800 dark:text-white flex items-center">
-                <i data-lucide="calculator" class="h-5 w-5 mr-2 text-indigo-500"></i>
+                <i data-lucide="calculator" class="h-5 w-5 mr-2 text-blue-500"></i>
                 Combined Lab + Theory Scores
             </h3>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {% for item in combined_scores %}
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-indigo-100 dark:border-indigo-900/50 overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-blue-100 dark:border-blue-900/50 overflow-hidden">
                 <div class="p-5 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                     <div class="min-w-0">
                         <div class="flex flex-wrap items-center gap-2 mb-2">
-                            <span class="text-xs font-mono bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 px-1.5 py-0.5 rounded">{{ item.code }}</span>
+                            <span class="text-xs font-mono bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded">{{ item.code }}</span>
                             <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">{{ item.total_credits }} Credits</span>
                         </div>
                         <h4 class="font-bold text-gray-900 dark:text-white leading-snug">{{ item.title }}</h4>
@@ -27,7 +27,7 @@
                         <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Converted Score</p>
                         {% if item.is_final_ready %}
                         <div class="flex items-baseline sm:justify-end">
-                            <span class="text-2xl font-black text-indigo-700 dark:text-indigo-300">{{ item.converted_score }}</span>
+                            <span class="text-2xl font-black text-blue-700 dark:text-blue-300">{{ item.converted_score }}</span>
                             <span class="text-sm font-medium text-gray-500 dark:text-gray-400 ml-1">/ {{ item.converted_max }}</span>
                         </div>
                         {% else %}
@@ -62,8 +62,8 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {% for course in courses %}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-all flex flex-col h-full">
-            <div class="p-5 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/30">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col h-full">
+            <div class="p-5 border-b border-gray-100 dark:border-gray-700 bg-gradient-to-b from-gray-50 to-transparent dark:from-gray-800/50 dark:to-transparent">
                 <div class="flex justify-between items-start">
                     <div>
                         <h3 class="font-bold text-lg text-gray-900 dark:text-white leading-snug mb-1">{{ course.title }}</h3>
@@ -72,7 +72,7 @@
                             <span class="text-xs text-gray-500 dark:text-gray-400">{{ course.slot }}</span>
                         </div>
                     </div>
-                    <span class="text-xs font-semibold bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 px-2 py-1 rounded whitespace-nowrap">
+                    <span class="text-xs font-semibold bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-2 py-1 rounded whitespace-nowrap">
                         {{ course.type }}
                     </span>
                 </div>
@@ -95,7 +95,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray-100 dark:divide-gray-700/50">
                             {% for mark in course.assessments %}
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors even:bg-gray-50/50 dark:even:bg-gray-800/30">
                                 <td class="px-5 py-3 font-medium text-gray-800 dark:text-gray-200">
                                     {{ mark.title }}
                                 </td>
@@ -107,7 +107,7 @@
                                 </td>
                                 <td class="px-4 py-3 text-center">
                                     <div class="flex flex-col">
-                                        <span class="font-semibold text-indigo-600 dark:text-indigo-400">{{ mark.weightage_mark }}</span>
+                                        <span class="font-semibold text-blue-600 dark:text-blue-400">{{ mark.weightage_mark }}</span>
                                         <span class="text-[10px] text-gray-400 dark:text-gray-500">({{ mark.weightage_pct }}%)</span>
                                     </div>
                                 </td>
@@ -134,7 +134,7 @@
             <div class="px-5 py-3 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
                 <span class="text-sm font-medium text-gray-600 dark:text-gray-300">Total Weightage</span>
                 <div class="flex items-baseline">
-                    <span class="text-lg font-bold text-indigo-700 dark:text-indigo-300">{{ course.total_obtained }}</span>
+                    <span class="text-lg font-bold text-blue-700 dark:text-blue-300">{{ course.total_obtained }}</span>
                     <span class="text-sm font-medium text-gray-500 dark:text-gray-400 ml-1">/ {{ course.total_max_weightage }}</span>
                 </div>
             </div>

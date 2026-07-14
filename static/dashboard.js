@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showCredentialsStatus(title, message, isError = false) {
         if (!elements.credentialsStatus) return;
         const icon = isError ? 'circle-alert' : 'loader-2';
-        const iconClass = isError ? 'text-red-500' : 'text-indigo-500 animate-spin';
+        const iconClass = isError ? 'text-red-500' : 'text-blue-500 animate-spin';
         elements.credentialsStatus.innerHTML = `
             <div class="bg-white dark:bg-gray-800 p-4 rounded-full shadow-sm mb-4 border border-gray-100 dark:border-gray-700">
                 <i data-lucide="${icon}" class="w-8 h-8 ${iconClass}"></i>
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 500);
             }
             else if (subsectionId === 'extra-calculator') {
-                elements.calculator.innerHTML = '<div class="p-8 text-center"><i data-lucide="loader" class="animate-spin h-8 w-8 mx-auto text-indigo-500 mb-2"></i><p class="text-gray-500">Opening calculator...</p></div>';
+                elements.calculator.innerHTML = '<div class="p-8 text-center"><i data-lucide="loader" class="animate-spin h-8 w-8 mx-auto text-blue-500 mb-2"></i><p class="text-gray-500">Opening calculator...</p></div>';
                 if (typeof lucide !== 'undefined') lucide.createIcons();
 
                 Promise.all([Data.fetchAttendanceForCache(), Data.fetchTimetableForCache()]).then(() => {
@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <h4 class="font-bold text-gray-900 dark:text-white text-base">${student.Name}</h4>
                                 <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">${student.RegNo}</p>
                             </div>
-                            <div class="transform transition-transform duration-200 chevron-icon text-gray-400 group-hover:text-indigo-500">
+                            <div class="transform transition-transform duration-200 chevron-icon text-gray-400 group-hover:text-blue-500">
                                 <i data-lucide="chevron-down" class="w-5 h-5"></i>
                             </div>
                         </div>

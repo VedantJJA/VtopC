@@ -105,7 +105,7 @@ export async function fetchAndDisplay(target, containerElement, title, extraPara
     if (!hasCachedData && containerElement && !returnDataOnly) {
         containerElement.innerHTML = `
             <div class="flex flex-col items-center justify-center py-12">
-                <i data-lucide="loader" class="animate-spin h-8 w-8 text-indigo-600 mb-3"></i>
+                <i data-lucide="loader" class="animate-spin h-8 w-8 text-blue-600 mb-3"></i>
                 <p class="text-sm text-gray-500">Loading ${title || 'content'}...</p>
             </div>`;
         if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -335,7 +335,7 @@ export async function fetchTimetableAndCourses(coursesContainer, timetableContai
         return;
     }
 
-    const loadingHTML = `<div class="p-8 text-center text-gray-500 flex flex-col items-center justify-center"><i data-lucide="loader" class="animate-spin h-8 w-8 mb-2 text-indigo-500"></i><p>Loading data...</p></div>`;
+    const loadingHTML = `<div class="p-8 text-center text-gray-500 flex flex-col items-center justify-center"><i data-lucide="loader" class="animate-spin h-8 w-8 mb-2 text-blue-500"></i><p>Loading data...</p></div>`;
 
     if (!hasCache) {
         if (coursesContainer) coursesContainer.innerHTML = loadingHTML;

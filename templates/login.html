@@ -20,7 +20,7 @@
     <meta property="twitter:description" content="Login to VtopC for a modern dashboard, dark mode, and instant attendance insights.">
     <meta property="twitter:image" content="{{ url_for('static', filename='icon-512.png') }}">
     
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#2563eb">
     
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
@@ -37,22 +37,27 @@
     <!-- Google Fonts (Optional fallback) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', system-ui, sans-serif; }
+        body { font-family: 'Outfit', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex flex-col min-h-screen p-4 transition-colors duration-200">
+<body class="bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-950 flex flex-col min-h-screen p-4 transition-colors duration-200">
     <div class="w-full max-w-6xl mx-auto flex-1 flex items-center justify-center">
         
         <div id="loadingContainer" class="text-center p-8">
-            <i data-lucide="loader" class="animate-spin w-10 h-10 text-indigo-600 dark:text-indigo-400 mx-auto"></i>
+            <i data-lucide="loader" class="animate-spin w-10 h-10 text-blue-600 dark:text-blue-400 mx-auto"></i>
             <p class="mt-4 text-gray-600 dark:text-gray-400">Checking for a saved session...</p>
         </div>
 
-        <div id="loginContainer" class="hidden w-full max-w-md mx-auto bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 transition-all duration-300">
-            <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-2">VTOP Login</h1>
-            <p class="text-center text-gray-500 dark:text-gray-400 mb-8">Enter your credentials to begin.</p>
+        <div id="loginContainer" class="hidden w-full max-w-md mx-auto bg-white dark:bg-gray-800 p-8 sm:p-10 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-300 section-enter">
+            <div class="flex justify-center mb-6">
+                <div class="h-12 w-12 rounded-xl bg-blue-600 flex items-center justify-center text-white">
+                    <i data-lucide="graduation-cap" class="h-7 w-7"></i>
+                </div>
+            </div>
+            <h1 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-2 tracking-tight">VTOP Client</h1>
+            <p class="text-center text-gray-500 dark:text-gray-400 mb-8 font-medium">Enter your credentials to continue.</p>
             
             <form id="loginForm" class="space-y-6">
                 <input type="hidden" id="sessionId">
@@ -62,7 +67,7 @@
                         <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
                             <i data-lucide="user" class="w-5 h-5 text-gray-400"></i>
                         </div>
-                        <input type="text" id="username" name="username" required class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors" placeholder="Registration No.">
+                        <input type="text" id="username" name="username" required class="block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-500" placeholder="Registration No.">
                     </div>
                 </div>
                 <div>
@@ -71,7 +76,7 @@
                         <div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
                             <i data-lucide="lock" class="w-5 h-5 text-gray-400"></i>
                         </div>
-                        <input type="password" id="password" name="password" required class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors" placeholder="Your Password">
+                        <input type="password" id="password" name="password" required class="block w-full pl-10 pr-10 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-500" placeholder="Your Password">
                         
                         <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors focus:outline-none">
                             <!-- Toggling logic swaps hidden class -->
@@ -85,11 +90,11 @@
                      <label for="captcha" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CAPTCHA</label>
                      <div id="captchaImageContainer" class="flex items-center justify-center bg-gray-100 dark:bg-gray-900 rounded-lg h-20 p-2 border border-gray-200 dark:border-gray-600 overflow-hidden">
                         </div>
-                     <input type="text" id="captcha" name="captcha" class="block w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent uppercase tracking-widest transition-colors" placeholder="ENTER TEXT" autocomplete="off">
+                     <input type="text" id="captcha" name="captcha" class="block w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase tracking-widest transition-all shadow-sm hover:border-gray-300 dark:hover:border-gray-500" placeholder="ENTER TEXT" autocomplete="off">
                 </div>
                 
                 <div class="pt-2">
-                    <button type="submit" id="loginButton" class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                    <button type="submit" id="loginButton" class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
                         <span id="loginButtonText">Login</span>
                         <i data-lucide="loader" id="loginButtonSpinner" class="animate-spin ml-2 w-4 h-4 hidden"></i>
                     </button>
