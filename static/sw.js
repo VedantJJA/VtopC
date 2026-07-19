@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mycampus-store-v11';
+const CACHE_NAME = 'mycampus-store-v12';
 
 const ASSETS_TO_CACHE = [
   '/',
